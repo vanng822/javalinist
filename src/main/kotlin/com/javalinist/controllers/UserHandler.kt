@@ -12,19 +12,19 @@ class UserHandler: BaseHandler, CrudHandler {
     private val users: Users = mutableListOf()
 
     override fun getAll(ctx: Context) {
-        ctx.json(users)
+        response(ctx, 200, users)
     }
 
     override fun getOne(ctx: Context, resourceId: String) {
         val userId: Int = resourceId.toInt()
         val user = users.findUser(userId)
         if (user == null) {
-            ctx.status(404).json(object {
+            response(ctx, 404, object {
                 val status = "NotFound"
             })
             return
         }
-        ctx.json(user)
+        response(ctx, 200, user)
     }
 
     override fun create(ctx: Context) {
@@ -45,11 +45,10 @@ class UserHandler: BaseHandler, CrudHandler {
         val user = User(id, name)
         users.add(user)
 
-        var res = object {
+        response(ctx, 201, object {
             val status = "OK"
             val id = user.id
-        }
-        ctx.status(201).json(res)
+        })
     }
 
     override fun update(ctx: Context, resourceId: String) {
