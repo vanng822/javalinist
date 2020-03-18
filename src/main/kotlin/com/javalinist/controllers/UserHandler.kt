@@ -59,6 +59,11 @@ class UserHandler: BaseHandler, CrudHandler {
             return
         }
 
+        if (users.findUser(name) != null) {
+            response(ctx, 409, "INVALID")
+            return
+        }
+
         user.name = name
         response(ctx)
     }
