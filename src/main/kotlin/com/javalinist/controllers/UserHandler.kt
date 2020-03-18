@@ -1,9 +1,6 @@
 package com.javalinist.controllers
 
-import com.javalinist.logic.Users
-import com.javalinist.logic.findUser
-import com.javalinist.logic.nextId
-import com.javalinist.logic.removeUser
+import com.javalinist.logic.*
 import com.javalinist.models.User
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.http.Context
@@ -35,12 +32,11 @@ class UserHandler: BaseHandler, CrudHandler {
             response(ctx, 409, "INVALID")
             return
         }
-        val id: Int = users.nextId()
-        val user = User(id, name)
-        users.add(user)
+
+        val id: Int = users.createUser(name)
 
         response(ctx, 201, "OK", object {
-            val id = user.id
+            val id = id
         })
     }
 

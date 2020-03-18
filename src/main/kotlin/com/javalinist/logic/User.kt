@@ -18,10 +18,19 @@ fun Users.removeUser(userId: Int) {
     }
 }
 
-fun Users.nextId(): Int {
+private fun Users.nextId(): Int {
     val lastUser = this.lastOrNull()
     if (lastUser == null) {
         return 1
     }
     return lastUser.id + 1
+}
+
+fun Users.createUser(name: String): Int {
+    return synchronized(this) {
+        val userId = nextId()
+        val user = User(userId, name)
+        this.add(user)
+        userId
+    }
 }
