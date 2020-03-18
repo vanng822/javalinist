@@ -5,11 +5,9 @@ import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
 
 fun main() {
-    val app = Javalin.create{ config ->
+    Javalin.create{ config ->
         config.defaultContentType = "application/json"
-    }.start(8080)
-
-    app.routes {
+    }.routes {
         ApiBuilder.crud("/users/:id", UserHandler())
-    }
+    }.start(8080)
 }
