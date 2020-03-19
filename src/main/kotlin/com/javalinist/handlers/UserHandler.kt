@@ -5,14 +5,11 @@ import io.javalin.apibuilder.CrudHandler
 import io.javalin.http.Context
 
 class UserHandler: BaseHandler, CrudHandler {
-    private val users: Users = mutableListOf()
+    private val users: Users = Users()
 
     override fun getAll(ctx: Context) {
-        val order = ctx.queryParam("order", "ASC")
-        if (order == "DESC") {
-            response(ctx, 200, ResponseStatus.OK, users.sortByDescending { it.name })
-        }
-        response(ctx, 200, ResponseStatus.OK, users)
+        val sortBy = ctx.queryParam("sortBy", "name")
+        response(ctx, 200, ResponseStatus.OK, users.sortByDescending(sortBy.toString()))
     }
 
     override fun getOne(ctx: Context, resourceId: String) {
@@ -31,12 +28,12 @@ class UserHandler: BaseHandler, CrudHandler {
             response(ctx, 400, ResponseStatus.INVALID)
             return
         }
-        if (users.findUser(name) != null) {
+        if (users.findUser(name.capitalize()) != null) {
             response(ctx, 409, ResponseStatus.INVALID)
             return
         }
 
-        val id: Int = users.createUser(name)
+        val id: Int = users.createUser(name.capitalize())
 
         response(ctx, 201, ResponseStatus.OK, object {
             val id = id
