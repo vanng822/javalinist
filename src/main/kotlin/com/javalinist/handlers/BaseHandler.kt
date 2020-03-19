@@ -1,4 +1,4 @@
-package com.javalinist.controllers
+package com.javalinist.handlers
 
 import com.javalinist.logic.ResponseStatus
 import io.javalin.http.Context

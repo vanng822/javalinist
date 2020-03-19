@@ -1,7 +1,6 @@
-package com.javalinist.controllers
+package com.javalinist.handlers
 
 import com.javalinist.logic.*
-import com.javalinist.models.User
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.http.Context
 

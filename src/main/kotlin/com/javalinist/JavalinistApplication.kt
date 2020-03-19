@@ -1,6 +1,6 @@
 package com.javalinist
 
-import com.javalinist.controllers.UserHandler
+import com.javalinist.handlers.UserHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
 
