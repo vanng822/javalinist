@@ -8,6 +8,10 @@ class UserHandler: BaseHandler, CrudHandler {
     private val users: Users = mutableListOf()
 
     override fun getAll(ctx: Context) {
+        val order = ctx.queryParam("order", "ASC")
+        if (order == "DESC") {
+            response(ctx, 200, ResponseStatus.OK, users.sortByDescending { it.name })
+        }
         response(ctx, 200, ResponseStatus.OK, users)
     }
 
