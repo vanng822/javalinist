@@ -7,6 +7,7 @@ import io.javalin.apibuilder.ApiBuilder
 fun main() {
     Javalin.create{ config ->
         config.defaultContentType = "application/json"
+        config.enableDevLogging()
     }.routes {
         ApiBuilder.crud("/users/:id", UserHandler())
     }.start(8080)
