@@ -28,12 +28,12 @@ class UserHandler: BaseHandler, CrudHandler {
             response(ctx, 400, ResponseStatus.INVALID)
             return
         }
-        if (users.findUser(name.capitalize()) != null) {
+        if (users.findUser(name) != null) {
             response(ctx, 409, ResponseStatus.INVALID)
             return
         }
 
-        val id: Int = users.createUser(name.capitalize())
+        val id: Int = users.createUser(name)
 
         response(ctx, 201, ResponseStatus.OK, object {
             val id = id
@@ -60,7 +60,7 @@ class UserHandler: BaseHandler, CrudHandler {
             return
         }
 
-        user.name = name
+        users.updateUser(user, name)
         response(ctx)
     }
 
