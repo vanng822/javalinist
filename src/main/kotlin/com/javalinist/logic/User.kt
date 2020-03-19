@@ -13,9 +13,7 @@ fun Users.findUser(name: String): User? {
 }
 
 fun Users.removeUser(userId: Int) {
-    removeIf {
-        user -> user.id == userId
-    }
+    this.removeIf { user -> user.id == userId }
 }
 
 private fun Users.nextId(): Int {
