@@ -6,12 +6,16 @@ class Users {
     var users: MutableList<User> = mutableListOf()
     var nextId: Int = 1
 
-    // Don't mention performance!!
-    fun sortByDescending(sortBy: String): MutableList<User> {
-        if (sortBy == "name") {
-            users.sortByDescending { user -> user.name }
-        } else {
-            users.sortByDescending { user -> user.id }
+    fun sort(sortBy: String?, order: String?): List<User> {
+        if (sortBy != null && sortBy == "name") {
+            if (order == "desc") {
+                return users.sortedByDescending { user -> user.name }
+            } else {
+                return users.sortedBy { user -> user.name }
+            }
+        }
+        if (order != null && order == "desc") {
+            return users.sortedByDescending { user -> user.id }
         }
         return users
     }

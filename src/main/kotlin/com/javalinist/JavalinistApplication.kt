@@ -5,7 +5,7 @@ import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
 
 fun main() {
-    Javalin.create{ config ->
+    Javalin.create { config ->
         config.defaultContentType = "application/json"
         config.enableDevLogging()
     }.routes {

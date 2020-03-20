@@ -1,6 +1,7 @@
 package com.javalinist.handlers
 
-import com.javalinist.logic.*
+import com.javalinist.logic.ResponseStatus
+import com.javalinist.logic.Users
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.http.Context
 
@@ -8,8 +9,9 @@ class UserHandler: BaseHandler, CrudHandler {
     private val users: Users = Users()
 
     override fun getAll(ctx: Context) {
-        val sortBy = ctx.queryParam("sortBy", "name")
-        response(ctx, 200, ResponseStatus.OK, users.sortByDescending(sortBy.toString()))
+        val sortBy = ctx.queryParam("sortBy")
+        val order = ctx.queryParam("order")
+        response(ctx, 200, ResponseStatus.OK, users.sort(sortBy, order))
     }
 
     override fun getOne(ctx: Context, resourceId: String) {
