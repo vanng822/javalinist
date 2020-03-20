@@ -10,9 +10,8 @@ class Users {
         if (sortBy != null && sortBy == "name") {
             if (order == "desc") {
                 return users.sortedByDescending { user -> user.name }
-            } else {
-                return users.sortedBy { user -> user.name }
             }
+            return users.sortedBy { user -> user.name }
         }
         if (order != null && order == "desc") {
             return users.sortedByDescending { user -> user.id }
