@@ -15,7 +15,11 @@ class UserHandler: BaseHandler, CrudHandler {
     }
 
     override fun getOne(ctx: Context, resourceId: String) {
-        val userId: Int = resourceId.toInt()
+        val userId: Int? = resourceId.toIntOrNull()
+        if (userId == null) {
+            response(ctx, 400, ResponseStatus.INVALID)
+            return
+        }
         val user = users.findUser(userId)
         if (user == null) {
             response(ctx, 404, ResponseStatus.NOT_FOUND)
@@ -25,7 +29,7 @@ class UserHandler: BaseHandler, CrudHandler {
     }
 
     override fun create(ctx: Context) {
-        val name: String? = ctx.queryParam("name")
+        val name = validateName(ctx)
         if (name == null || name == "") {
             response(ctx, 400, ResponseStatus.INVALID)
             return
@@ -41,8 +45,12 @@ class UserHandler: BaseHandler, CrudHandler {
     }
 
     override fun update(ctx: Context, resourceId: String) {
-        val userId: Int = resourceId.toInt()
-        val name: String? = ctx.queryParam("name")
+        val userId: Int? = resourceId.toIntOrNull()
+        if (userId == null) {
+            response(ctx, 400, ResponseStatus.INVALID)
+            return
+        }
+        val name = validateName(ctx)
         if (name == null || name == "") {
             response(ctx, 400, ResponseStatus.INVALID)
             return
@@ -65,8 +73,21 @@ class UserHandler: BaseHandler, CrudHandler {
     }
 
     override fun delete(ctx: Context, resourceId: String) {
-        val userId: Int = resourceId.toInt()
+        val userId: Int? = resourceId.toIntOrNull()
+        if (userId == null) {
+            response(ctx, 400, ResponseStatus.INVALID)
+            return
+        }
         users.removeUser(userId)
         response(ctx)
+    }
+
+    private fun validateName(ctx: Context): String? {
+        // Don't understand this design
+        return ctx.queryParam<String>("name").run {
+            this.check({it.length < 100})
+            this.check({it.length > 1})
+            this.check({it.matches(Regex("[a-zA-Z1-9 ]+"))})
+        }.getOrNull()
     }
 }
