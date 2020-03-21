@@ -8,7 +8,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
 import java.util.logging.Logger
 
-class UserBroadcast: Users() {
+class UserBroadcast private constructor(): Users() {
     val userEvents = BroadcastChannel<UserEvent>(1)
     private val logger = Logger.getLogger(UserBroadcast::class.java.name)
 
