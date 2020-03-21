@@ -56,3 +56,6 @@ build-jar:
 bash: CONTAINER_ID=$(shell $(DOCKER) ps -f name=$(name) -q)
 bash:
 	$(DOCKER) exec -it $(CONTAINER_ID) bash
+
+remote-tail:
+	ssh -C $(DOCKER_REMOTE_HOST) "cd $(REPOS_PATH)/$(repo_name) && make tail"
