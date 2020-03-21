@@ -28,9 +28,9 @@ curl -X PATCH 'http://javalinist.isgoodness.com/users/{userId}?name=Javalinist'
 ```
 ## Delete user
 ```bash
-curl -X DELETE 'http://javalinist.isgoodness.com/users/{userId}
+curl -X DELETE 'http://javalinist.isgoodness.com/users/{userId}'
 ```
 ## List all
 ```bash
-curl -X GET 'http://javalinist.isgoodness.com/users
+curl -X GET 'http://javalinist.isgoodness.com/users'
 ```
