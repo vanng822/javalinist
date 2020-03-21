@@ -12,7 +12,7 @@ class IndexHandler: BaseHandler, Handler {
                 object {
                     val endpoint = "/users"
                     val type = "CRUD"
-                    val options = "GET, POST, PATCH, DELETE"
+                    val options = "POST, GET, PATCH, DELETE"
                 },
                 object {
                     val endpoint = "/sse/users"
