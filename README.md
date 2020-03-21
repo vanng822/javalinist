@@ -22,6 +22,10 @@ evtSource.addEventListener("CREATED", function(e) {
 ```bash
 curl -X POST 'http://javalinist.isgoodness.com/users?name=Javalin'
 ```
+## Get user
+```bash
+curl -X GET 'http://javalinist.isgoodness.com/users/{userId}'
+```
 ## Update user
 ```bash
 curl -X PATCH 'http://javalinist.isgoodness.com/users/{userId}?name=Javalinist'
