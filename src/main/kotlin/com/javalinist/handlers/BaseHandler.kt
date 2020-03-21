@@ -1,6 +1,6 @@
 package com.javalinist.handlers
 
-import com.javalinist.logic.ResponseStatus
+import com.javalinist.enums.ResponseStatus
 import io.javalin.http.Context
 
 interface BaseHandler {

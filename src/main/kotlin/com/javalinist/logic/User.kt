@@ -2,7 +2,7 @@ package com.javalinist.logic
 
 import com.javalinist.models.User
 
-class Users {
+open class Users {
     var users: MutableList<User> = mutableListOf()
     var nextId: Int = 1
 
@@ -23,7 +23,7 @@ class Users {
         return name.capitalize()
     }
 
-    fun updateUser(user: User, name: String) {
+    open fun updateUser(user: User, name: String) {
         user.name = fixName(name)
     }
 
@@ -36,16 +36,17 @@ class Users {
         return users.find { user -> user.name == fname }
     }
 
-    fun removeUser(userId: Int) {
+    open fun removeUser(userId: Int) {
         users.removeIf { user -> user.id == userId }
     }
 
-    fun createUser(name: String): Int {
+    open fun createUser(name: String): User {
         return synchronized(this.nextId) {
             val userId = this.nextId++
             val user = User(userId, fixName(name))
             users.add(user)
-            userId
+            user
         }
     }
 }
+

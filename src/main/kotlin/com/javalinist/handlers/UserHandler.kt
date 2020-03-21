@@ -1,12 +1,12 @@
 package com.javalinist.handlers
 
-import com.javalinist.logic.ResponseStatus
-import com.javalinist.logic.Users
+import com.javalinist.enums.ResponseStatus
+import com.javalinist.logic.UserBroadcast
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.http.Context
 
 class UserHandler: BaseHandler, CrudHandler {
-    private val users: Users = Users()
+    private val users: UserBroadcast = UserBroadcast.getInstance()
 
     override fun getAll(ctx: Context) {
         val sortBy = ctx.queryParam("sortBy")
@@ -35,18 +35,16 @@ class UserHandler: BaseHandler, CrudHandler {
             return
         }
 
-        val id: Int = users.createUser(name)
+        val user = users.createUser(name)
 
-        response(ctx, 201, ResponseStatus.OK, object {
-            val id = id
-        })
+        response(ctx, 201, ResponseStatus.OK, user)
     }
 
     override fun update(ctx: Context, resourceId: String) {
         val userId: Int = resourceId.toInt()
         val name: String? = ctx.queryParam("name")
         if (name == null || name == "") {
-            response(ctx, 400,ResponseStatus.INVALID)
+            response(ctx, 400, ResponseStatus.INVALID)
             return
         }
         var user = users.findUser(userId)

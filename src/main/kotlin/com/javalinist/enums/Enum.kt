@@ -1,4 +1,4 @@
-package com.javalinist.logic
+package com.javalinist.enums
 
 enum class ResponseStatus {
     NOT_FOUND,
