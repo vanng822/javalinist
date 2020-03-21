@@ -1,5 +1,3 @@
-DOCKER_REMOTE_HOST := raspberrypi3
-
 ROOT := $(shell pwd)
 OS := $(shell uname)
 tag := $(shell cat VERSION)
@@ -13,6 +11,9 @@ TAG_VERSION := openjdk
 DOCKER_PORT_FORWARD_ARGS := -p 127.0.0.1:8080:8080
 ifeq ($(REPOS_PATH),)
 $(error error is "REPOS_PATH not set")
+endif
+ifeq ($(DOCKER_REMOTE_HOST),)
+$(error error is "DOCKER_REMOTE_HOST not set")
 endif
 else
 DOCKER := sudo docker
