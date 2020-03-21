@@ -55,20 +55,10 @@ class UserBroadcast private constructor(): Users() {
     }
 
     companion object {
-        private var instance: UserBroadcast? = null
+        private var instance: UserBroadcast = UserBroadcast()
 
         fun getInstance(): UserBroadcast {
-            if (instance != null) {
-                return instance as UserBroadcast
-            }
-            return synchronized(this) {
-                val i2 = instance
-                if (i2 != null) {
-                    return i2
-                }
-                instance = UserBroadcast()
-                return instance as UserBroadcast
-            }
+            return instance
         }
     }
 }
