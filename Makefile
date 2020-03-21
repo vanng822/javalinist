@@ -16,6 +16,10 @@ TAG_VERSION := openjdk:8-jre
 DOCKER_PORT_FORWARD_ARGS :=
 endif
 
+ifeq ($(REPOS_PATH),)
+$(error error is "REPOS_PATH not set")
+endif
+
 .PHONY: build
 build: build-jar
 	$(DOCKER) build --build-arg TAG_VERSION=$(TAG_VERSION) -t $(image_tag) .
@@ -40,10 +44,10 @@ tail:
 	$(DOCKER) logs -f $(CONTAINER_ID)
 
 pull:
-	ssh -C $(DOCKER_REMOTE_HOST) "cd /home/vanng822/intel80/repos/eurojackpot && git pull --rebase"
+	ssh -C $(DOCKER_REMOTE_HOST) "cd ${REPOS_PATH}/javalinist && git pull --rebase"
 
 release:
-	ssh -C $(DOCKER_REMOTE_HOST) "cd /home/vanng822/intel80/repos/eurojackpot && git pull --rebase && make deploy"
+	ssh -C $(DOCKER_REMOTE_HOST) "cd ${REPOS_PATH}/javalinist && git pull --rebase && make deploy"
 
 .PHONY: build-jar
 build-jar:
