@@ -11,14 +11,13 @@ ifeq ($(OS),Darwin)
 DOCKER := docker
 TAG_VERSION := openjdk
 DOCKER_PORT_FORWARD_ARGS := -p 127.0.0.1:8080:8080
+ifeq ($(REPOS_PATH),)
+$(error error is "REPOS_PATH not set")
+endif
 else
 DOCKER := sudo docker
 TAG_VERSION := openjdk:8-jre
 DOCKER_PORT_FORWARD_ARGS :=
-endif
-
-ifeq ($(REPOS_PATH),)
-$(error error is "REPOS_PATH not set")
 endif
 
 .PHONY: build
