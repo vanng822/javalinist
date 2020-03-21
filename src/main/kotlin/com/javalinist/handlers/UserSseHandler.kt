@@ -6,7 +6,6 @@ import io.javalin.plugin.json.JavalinJackson
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.consumeEach
-import java.util.function.Consumer
 
 class UserSseHandler {
     private val users: UserBroadcast = UserBroadcast.getInstance()
