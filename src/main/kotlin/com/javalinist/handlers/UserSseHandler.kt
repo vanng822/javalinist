@@ -10,7 +10,7 @@ class UserSseHandler {
 
     suspend fun handle(client: SseClient) {
         users.userEvents.consumeEach { userEvent ->
-            client.sendEvent(userEvent.eventType.toString(), JavalinJackson.toJson(userEvent.user))
+            client.sendEvent(userEvent.type.toString(), JavalinJackson.toJson(userEvent.user))
         }
     }
 }
