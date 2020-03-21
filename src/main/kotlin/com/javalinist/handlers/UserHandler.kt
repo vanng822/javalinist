@@ -87,7 +87,7 @@ class UserHandler: BaseHandler, CrudHandler {
         return ctx.queryParam<String>("name").run {
             this.check({it.length < 100})
             this.check({it.length > 1})
-            this.check({it.matches(Regex("[a-zA-Z1-9 ]+"))})
+            this.check({it.matches(Regex("[a-zA-Z0-9 ]+"))})
         }.getOrNull()
     }
 }
