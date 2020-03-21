@@ -5,7 +5,13 @@ import com.javalinist.models.User
 open class Users {
     var users: MutableList<User> = mutableListOf()
     var nextId: Int = 1
+    val maxSize: Int = 1000
 
+    private fun checkSize() {
+        if (users.size > maxSize) {
+            users.removeAt(0)
+        }
+    }
     fun sort(sortBy: String?, order: String?): List<User> {
         if (sortBy != null && sortBy == "name") {
             if (order == "desc") {
@@ -41,6 +47,8 @@ open class Users {
     }
 
     open fun createUser(name: String): User {
+        checkSize()
+
         return synchronized(this.nextId) {
             val userId = this.nextId++
             val user = User(userId, fixName(name))
