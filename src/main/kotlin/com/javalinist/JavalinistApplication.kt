@@ -1,5 +1,6 @@
 package com.javalinist
 
+import com.javalinist.handlers.IndexHandler
 import com.javalinist.handlers.UserHandler
 import com.javalinist.handlers.UserSseHandler
 import io.javalin.Javalin
@@ -10,6 +11,7 @@ fun main() {
         config.defaultContentType = "application/json"
         config.enableDevLogging()
     }.routes {
+        ApiBuilder.get("/", IndexHandler())
         ApiBuilder.crud("/users/:id", UserHandler())
         val sseHandler = UserSseHandler()
         ApiBuilder.sse("/sse/users", {

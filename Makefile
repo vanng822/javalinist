@@ -45,10 +45,10 @@ tail:
 	$(DOCKER) logs -f $(CONTAINER_ID)
 
 pull:
-	ssh -C $(DOCKER_REMOTE_HOST) "cd ${REPOS_PATH}/$(repo_name) && git pull --rebase"
+	ssh -C $(DOCKER_REMOTE_HOST) "cd $(REPOS_PATH)/$(repo_name) && git pull --rebase"
 
 release:
-	ssh -C $(DOCKER_REMOTE_HOST) "cd ${REPOS_PATH}/$(repo_name) && git pull --rebase && make deploy"
+	ssh -C $(DOCKER_REMOTE_HOST) "cd $(REPOS_PATH)/$(repo_name) && git pull --rebase && make deploy"
 
 .PHONY: build-jar
 build-jar:
