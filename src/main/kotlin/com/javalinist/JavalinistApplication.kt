@@ -16,13 +16,10 @@ fun main() {
         config.enableDevLogging()
     }.routes {
         ApiBuilder.crud("/users/:id", UserHandler())
-    }
-    val sseHandler = UserSseHandler()
-
-    app.sse("/sse/users") { client ->
-        GlobalScope.async {
-            sseHandler.handle(client)
-        }
+        val sseHandler = UserSseHandler()
+        ApiBuilder.sse("/sse/users", {
+            client -> sseHandler.handle(client)
+        })
     }
     app.start(8080)
 }
