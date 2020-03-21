@@ -1,13 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("jvm") version "1.3.70"
     id("java")
     id("application")
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 group = "com.javalinist"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenCentral()
@@ -24,6 +26,21 @@ dependencies {
 
 application {
     mainClassName = "com.javalinist.JavalinistApplicationKt"
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        mergeServiceFiles()
+        manifest {
+            attributes["Main-Class"] = application.mainClassName
+        }
+    }
+}
+
+tasks {
+    "build" {
+        dependsOn(shadowJar)
+    }
 }
 
 tasks.withType<Test> {
