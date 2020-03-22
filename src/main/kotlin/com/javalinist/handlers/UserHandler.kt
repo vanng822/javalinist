@@ -3,6 +3,7 @@ package com.javalinist.handlers
 import com.javalinist.enums.ResponseStatus
 import com.javalinist.logic.UserBroadcast
 import io.javalin.apibuilder.CrudHandler
+import io.javalin.core.validation.Validator
 import io.javalin.http.Context
 
 class UserHandler: BaseHandler, CrudHandler {
@@ -83,11 +84,13 @@ class UserHandler: BaseHandler, CrudHandler {
     }
 
     private fun validateName(ctx: Context): String? {
-        // Don't understand this design
-        return ctx.queryParam<String>("name").run {
-            this.check({it.length < 100})
-            this.check({it.length > 1})
-            this.check({it.matches(Regex("^[a-zA-Z0-9]+( +[a-zA-Z0-9]+)*"))})
-        }.getOrNull()
+        return ctx.queryParam<String>("name").validateName().getOrNull()
     }
+}
+
+inline fun Validator<String>.validateName(): Validator<String> {
+    this.check({it.length < 100})
+    this.check({it.length > 1})
+    this.check({it.matches(Regex("^[a-zA-Z0-9]+( +[a-zA-Z0-9]+)*"))})
+    return this
 }
