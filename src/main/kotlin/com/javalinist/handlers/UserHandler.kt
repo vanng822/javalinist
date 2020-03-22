@@ -88,7 +88,7 @@ class UserHandler: BaseHandler, CrudHandler {
     }
 }
 
-inline fun Validator<String>.validateName(): Validator<String> {
+fun Validator<String>.validateName(): Validator<String> {
     this.check({it.length < 100})
     this.check({it.length > 1})
     this.check({it.matches(Regex("^[a-zA-Z0-9]+( +[a-zA-Z0-9]+)*"))})
