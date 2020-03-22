@@ -7,16 +7,16 @@
         var evtSource = new EventSource("/sse/users");
         evtSource.addEventListener("CREATED", function(e) {
             var data = JSON.parse(e.data);
-            console.log("CREATED", data);
-            document.getElementById("sseContent").appendChild(renderEvent("CREATED", data));
+            console.log(e.type, data);
+            document.getElementById("sseContent").appendChild(renderEvent(e.type, data));
         }); evtSource.addEventListener("UPDATED", function(e) {
             var data = JSON.parse(e.data);
-            console.log("UPDATED", data);
-            document.getElementById("sseContent").appendChild(renderEvent("UPDATED", data));
+            console.log(e.type, data);
+            document.getElementById("sseContent").appendChild(renderEvent(e.type, data));
         });evtSource.addEventListener("DELETED", function(e) {
             var data = JSON.parse(e.data);
-            console.log("DELETED", data);
-            document.getElementById("sseContent").appendChild(renderEvent("DELETED", data));
+            console.log(e.type, data);
+            document.getElementById("sseContent").appendChild(renderEvent(e.type, data));
         })
 
         function renderEvent(eventName, data) {
