@@ -19,6 +19,12 @@ class IndexHandler: BaseHandler, Handler {
                     val type = "SSE"
                 }
             )
+            val pages = listOf<Any>(
+                object {
+                    val page = "/sse"
+                    val type = "html"
+                }
+            )
         })
     }
 }

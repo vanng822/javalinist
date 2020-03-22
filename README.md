@@ -1,22 +1,9 @@
 # javalinist
 Trying out javalin. Running demo at http://javalinist.isgoodness.com/
 
-# Sse
-Go to the url above and run this code in the console. Try to create, update or delete operation bellow to see.
+# Server-sent events, sse
+Go to http://javalinist.isgoodness.com/sse and try to create, update or delete operation bellow to see.
 
-```javascript
-var evtSource = new EventSource("/sse/users");
-evtSource.addEventListener("CREATED", function(e) {
-    var data = JSON.parse(e.data);
-    console.log("CREATED", data)
-}); evtSource.addEventListener("UPDATED", function(e) {
-    var data = JSON.parse(e.data);
-    console.log("UPDATED", data)
-});evtSource.addEventListener("DELETED", function(e) {
-    var data = JSON.parse(e.data);
-    console.log("DELETED", data)
-})
-```
 # Operation on /users
 ## Create user
 ```bash

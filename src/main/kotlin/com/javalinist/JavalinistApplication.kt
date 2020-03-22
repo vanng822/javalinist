@@ -3,6 +3,7 @@ package com.javalinist
 import com.javalinist.handlers.IndexHandler
 import com.javalinist.handlers.UserHandler
 import com.javalinist.handlers.UserSseHandler
+import com.javalinist.web_handlers.SseWebHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
 
@@ -17,6 +18,9 @@ fun main() {
         ApiBuilder.sse("/sse/users", {
             client -> sseHandler.handle(client)
         })
+
+        // Web
+        ApiBuilder.get("/sse", SseWebHandler())
     }
     app.start(8080)
 }

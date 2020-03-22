@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server-sent events on users</title>
+    <script type="text/javascript">
+        var evtSource = new EventSource("/sse/users");
+        evtSource.addEventListener("CREATED", function(e) {
+            var data = JSON.parse(e.data);
+            console.log("CREATED", data);
+            document.getElementById("sseContent").appendChild(renderEvent("CREATED", data));
+        }); evtSource.addEventListener("UPDATED", function(e) {
+            var data = JSON.parse(e.data);
+            console.log("UPDATED", data);
+            document.getElementById("sseContent").appendChild(renderEvent("UPDATED", data));
+        });evtSource.addEventListener("DELETED", function(e) {
+            var data = JSON.parse(e.data);
+            console.log("DELETED", data);
+            document.getElementById("sseContent").appendChild(renderEvent("DELETED", data));
+        })
+
+        function renderEvent(eventName, data) {
+            var el = document.createElement("div");
+            el.innerHTML = eventName + ": " + JSON.stringify(data);
+            return el;
+        }
+    </script>
+    <style>
+        .center {
+            text-align: center;
+            font-size: 12px;
+        }
+        .headline {
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="headline">Server-sent events on users</div>
+<div class="center" id="sseContent"></div>
+</body>
+</html>
