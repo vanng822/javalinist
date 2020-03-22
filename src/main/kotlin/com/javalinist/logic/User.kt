@@ -30,7 +30,9 @@ open class Users {
     }
 
     open fun updateUser(user: User, name: String) {
-        user.name = fixName(name)
+        user.let {
+            it.name = fixName(name)
+        }
     }
 
     fun findUser(userId: Int): User? {
