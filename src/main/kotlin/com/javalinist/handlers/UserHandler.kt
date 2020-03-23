@@ -1,16 +1,15 @@
 package com.javalinist.handlers
 
 import com.javalinist.enums.ResponseStatus
-import com.javalinist.logic.DbUser
 import com.javalinist.logic.UserBroadcast
 import com.javalinist.models.User
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.core.validation.Validator
 import io.javalin.http.Context
+import org.h2.jdbc.JdbcBatchUpdateException
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
-import java.lang.Exception
 
 class UserHandler: BaseHandler, CrudHandler {
     private val users: UserBroadcast = UserBroadcast.getInstance()
@@ -48,7 +47,7 @@ class UserHandler: BaseHandler, CrudHandler {
         try {
             user = users.createUser(name)
         } catch (exc: ExposedSQLException) {
-            if (exc.cause is JdbcSQLIntegrityConstraintViolationException) {
+            if (exc.cause is JdbcBatchUpdateException || exc.cause is JdbcSQLIntegrityConstraintViolationException) {
                 response(ctx, 409, ResponseStatus.INVALID)
                 return
             }
