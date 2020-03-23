@@ -71,7 +71,7 @@ open class Users {
         }
     }
 
-    fun findUser(userId: Int): User? {
+    fun findUser(userId: Int): User {
         var user: DbUser? = null
         try {
             transaction {
@@ -81,28 +81,20 @@ open class Users {
 
         }
 
-        if (user == null) {
-            return null
-        }
         return User(user!!.id.value, user!!.name)
     }
 
-    fun findUser(name: String): User? {
+    fun findUser(name: String): User {
         val fname = fixName(name)
         var userId: Int = 0
-        try {
-            transaction {
-                val query = DbUser.table.select {
-                    users_table.name eq fname
-                }
-                var res = query.first()
-                userId = res[users_table.id].value
+        transaction {
+            val query = DbUser.table.select {
+                users_table.name eq fname
             }
-        } catch (exc: NoSuchElementException) {
+            var res = query.first()
+            userId = res[users_table.id].value
         }
-        if (userId == 0) {
-            return null
-        }
+
         return User(userId, fname)
     }
 

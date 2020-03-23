@@ -1,10 +1,16 @@
 package com.javalinist.handlers
 
 import com.javalinist.enums.ResponseStatus
+import com.javalinist.logic.DbUser
 import com.javalinist.logic.UserBroadcast
+import com.javalinist.models.User
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.core.validation.Validator
 import io.javalin.http.Context
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
+import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
+import org.jetbrains.exposed.exceptions.ExposedSQLException
+import java.lang.Exception
 
 class UserHandler: BaseHandler, CrudHandler {
     private val users: UserBroadcast = UserBroadcast.getInstance()
@@ -21,8 +27,10 @@ class UserHandler: BaseHandler, CrudHandler {
             response(ctx, 400, ResponseStatus.INVALID)
             return
         }
-        val user = users.findUser(userId)
-        if (user == null) {
+        val user: User
+        try {
+            user = users.findUser(userId)
+        } catch (exc: EntityNotFoundException) {
             response(ctx, 404, ResponseStatus.NOT_FOUND)
             return
         }
@@ -35,12 +43,17 @@ class UserHandler: BaseHandler, CrudHandler {
             response(ctx, 400, ResponseStatus.INVALID)
             return
         }
-        if (users.findUser(name) != null) {
-            response(ctx, 409, ResponseStatus.INVALID)
-            return
-        }
 
-        val user = users.createUser(name)
+        var user: User
+        try {
+            user = users.createUser(name)
+        } catch (exc: ExposedSQLException) {
+            if (exc.cause is JdbcSQLIntegrityConstraintViolationException) {
+                response(ctx, 409, ResponseStatus.INVALID)
+                return
+            }
+            throw exc
+        }
 
         response(ctx, 201, ResponseStatus.OK, user)
     }
@@ -56,20 +69,25 @@ class UserHandler: BaseHandler, CrudHandler {
             response(ctx, 400, ResponseStatus.INVALID)
             return
         }
-        var user = users.findUser(userId)
-        if (user == null) {
+
+        var user:User
+        try {
+            user = users.findUser(userId)
+        } catch (exc: EntityNotFoundException) {
             response(ctx, 404, ResponseStatus.NOT_FOUND, object {
                 val id = userId
             })
             return
         }
-
-        if (users.findUser(name) != null) {
-            response(ctx, 409, ResponseStatus.INVALID)
-            return
+        try {
+            users.updateUser(user, name)
+        } catch (exc: ExposedSQLException) {
+            if (exc.cause is JdbcSQLIntegrityConstraintViolationException) {
+                response(ctx, 409, ResponseStatus.INVALID)
+                return
+            }
+            throw exc
         }
-
-        users.updateUser(user, name)
         response(ctx)
     }
 
