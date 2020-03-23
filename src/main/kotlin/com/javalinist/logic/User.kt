@@ -73,14 +73,10 @@ open class Users {
 
     fun findUser(userId: Int): User {
         var user: DbUser? = null
-        try {
-            transaction {
-                user = DbUser.get(userId)
-            }
-        } catch (exc: EntityNotFoundException) {
 
+        transaction {
+            user = DbUser.get(userId)
         }
-
         return User(user!!.id.value, user!!.name)
     }
 
