@@ -23,6 +23,10 @@ dependencies {
     compile("com.fasterxml.jackson.core:jackson-databind:2.10.1")
     compile("org.thymeleaf:thymeleaf:3.0.9.RELEASE")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
+    compile("org.jetbrains.exposed", "exposed-core", "0.22.1")
+    compile("org.jetbrains.exposed", "exposed-dao", "0.22.1")
+    compile("org.jetbrains.exposed", "exposed-jdbc", "0.22.1")
+    compile("com.h2database:h2:1.4.200")
 }
 
 application {
