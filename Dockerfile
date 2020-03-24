@@ -4,6 +4,7 @@ FROM arm32v7/${TAG_VERSION}
 
 WORKDIR /app
 
+ADD ./README.md README.md
 ADD ./build/libs/javalinist-1.0-all.jar server.jar
 
 EXPOSE 8080
