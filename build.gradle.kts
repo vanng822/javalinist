@@ -27,6 +27,7 @@ dependencies {
     compile("org.jetbrains.exposed", "exposed-dao", "0.22.1")
     compile("org.jetbrains.exposed", "exposed-jdbc", "0.22.1")
     compile("com.h2database:h2:1.4.200")
+    compile("com.vladsch.flexmark:flexmark-all:0.60.2")
 }
 
 application {

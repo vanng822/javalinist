@@ -1,6 +1,6 @@
 package com.javalinist
 
-import com.javalinist.handlers.IndexHandler
+import com.javalinist.web_handlers.IndexHandler
 import com.javalinist.handlers.UserHandler
 import com.javalinist.handlers.UserSseHandler
 import com.javalinist.logic.getDb
@@ -17,7 +17,7 @@ fun main() {
         config.defaultContentType = "application/json"
         config.enableDevLogging()
     }.routes {
-        ApiBuilder.get("/", IndexHandler())
+
         ApiBuilder.crud("/users/:id", UserHandler())
         val sseHandler = UserSseHandler()
         ApiBuilder.sse("/sse/users", {
@@ -25,6 +25,7 @@ fun main() {
         })
 
         // Web
+        ApiBuilder.get("/", IndexHandler())
         ApiBuilder.get("/sse", SseWebHandler())
     }
 
