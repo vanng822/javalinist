@@ -13,6 +13,7 @@ import io.javalin.http.Context
 import io.javalin.http.Handler
 import io.javalin.plugin.rendering.template.TemplateUtil
 import com.vladsch.flexmark.profile.pegdown.Extensions
+import com.vladsch.flexmark.util.misc.Extension
 import java.io.File
 import java.util.*
 
@@ -22,6 +23,7 @@ class IndexHandler: BaseHandler, Handler {
     override fun handle(ctx: Context) {
         val readme = File("./README.md")
         val options = MutableDataSet()
+        options.set(Parser.EXTENSIONS, Collections.singleton(AutolinkExtension.create() as Extension))
         val parser: Parser = Parser.builder(options).build()
         val renderer = HtmlRenderer.builder(options).build()
         val document: Node = parser.parse(readme.readText())
