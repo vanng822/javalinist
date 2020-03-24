@@ -7,10 +7,8 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 
-
-fun getDb(): Database {
-    val db = Database.connect("jdbc:h2:mem:javalinist;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false", driver = "org.h2.Driver")
-    return db
+val DB: Database by lazy {
+    Database.connect("jdbc:h2:mem:javalinist;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false", driver = "org.h2.Driver")
 }
 
 object users_table : IntIdTable(name = "users") {

@@ -1,10 +1,10 @@
 package com.javalinist
 
-import com.javalinist.web_handlers.IndexHandler
 import com.javalinist.handlers.UserHandler
 import com.javalinist.handlers.UserSseHandler
-import com.javalinist.logic.getDb
+import com.javalinist.logic.DB
 import com.javalinist.logic.users_table
+import com.javalinist.web_handlers.IndexHandler
 import com.javalinist.web_handlers.SseWebHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
@@ -29,8 +29,7 @@ fun main() {
         ApiBuilder.get("/sse", SseWebHandler())
     }
 
-    val db = getDb()
-    db.run {
+    DB.run {
         transaction {
             SchemaUtils.create(users_table)
         }
