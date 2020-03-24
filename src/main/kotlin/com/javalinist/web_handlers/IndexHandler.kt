@@ -19,15 +19,16 @@ import java.util.*
 
 
 class IndexHandler: BaseHandler, Handler {
-
-    override fun handle(ctx: Context) {
-        val readme = File("./README.md")
+    val README: String by lazy {
         val options = MutableDataSet()
         options.set(Parser.EXTENSIONS, Collections.singleton(AutolinkExtension.create() as Extension))
         val parser: Parser = Parser.builder(options).build()
         val renderer = HtmlRenderer.builder(options).build()
-        val document: Node = parser.parse(readme.readText())
-        val html = renderer.render(document)
-        ctx.render("/templates/index.html", TemplateUtil.model("readme", html))
+        val readme = File("./README.md").readText()
+        val document: Node = parser.parse(readme)
+        renderer.render(document)
+    }
+    override fun handle(ctx: Context) {
+        ctx.render("/templates/index.html", TemplateUtil.model("readme", README))
     }
 }
