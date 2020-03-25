@@ -65,9 +65,10 @@ open class Users {
     }
 
     open fun updateUser(user: User, name: String) {
+        user.name = fixName(name)
         transaction {
             val u = DbUser.get(user.id)
-            u.name = fixName(name)
+            u.name = user.name
         }
     }
 
