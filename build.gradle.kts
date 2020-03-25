@@ -21,13 +21,21 @@ dependencies {
     compile("io.javalin:javalin:3.7.0")
     compile("org.slf4j:slf4j-simple:1.6.1")
     compile("com.fasterxml.jackson.core:jackson-databind:2.10.1")
-    compile("org.thymeleaf:thymeleaf:3.0.9.RELEASE")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
+    // template
+    compile("org.thymeleaf:thymeleaf:3.0.9.RELEASE")
+    // inmemory db
     compile("org.jetbrains.exposed", "exposed-core", "0.22.1")
     compile("org.jetbrains.exposed", "exposed-dao", "0.22.1")
     compile("org.jetbrains.exposed", "exposed-jdbc", "0.22.1")
     compile("com.h2database:h2:1.4.200")
+    // markdown
     compile("com.vladsch.flexmark:flexmark-all:0.60.2")
+    // openapi
+    compile("io.swagger.core.v3:swagger-core:2.0.9")
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1")
+    compile("cc.vileda:kotlin-openapi3-dsl:0.20.2")
+    compile("org.webjars:swagger-ui:3.24.3")
 }
 
 application {

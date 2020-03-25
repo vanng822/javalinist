@@ -2,9 +2,14 @@
 Trying out javalin. Running demo at http://javalinist.isgoodness.com/
 
 # Server-sent events, sse
-Go to http://javalinist.isgoodness.com/sse and try to create, update or delete operation bellow to see.
+Go [here](/sse) and try to create, update or delete operation bellow to see.
 
-# Operation on /users
+# Try with swagger ui
+
+[Go to swagger ui](/swagger)
+
+# Operation on /users using curl
+
 ## Create user
 ```bash
 curl -X POST 'http://javalinist.isgoodness.com/users?name=Javalin'

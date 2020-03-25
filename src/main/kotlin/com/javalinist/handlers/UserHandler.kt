@@ -6,10 +6,13 @@ import com.javalinist.models.User
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.core.validation.Validator
 import io.javalin.http.Context
+import io.javalin.plugin.openapi.annotations.OpenApi
+import io.javalin.plugin.openapi.annotations.OpenApiParam
 import org.h2.jdbc.JdbcBatchUpdateException
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
+
 
 class UserHandler: BaseHandler, CrudHandler {
     private val users: UserBroadcast = UserBroadcast.getInstance()
@@ -36,6 +39,9 @@ class UserHandler: BaseHandler, CrudHandler {
         response(ctx, 200, ResponseStatus.OK, user)
     }
 
+    @OpenApi(
+        queryParams = [OpenApiParam(name = "name", required = true)]
+    )
     override fun create(ctx: Context) {
         val name = validateName(ctx)
         if (name == null || name == "") {
@@ -57,6 +63,9 @@ class UserHandler: BaseHandler, CrudHandler {
         response(ctx, 201, ResponseStatus.OK, user)
     }
 
+    @OpenApi(
+        queryParams = [OpenApiParam(name = "name", required = true)]
+    )
     override fun update(ctx: Context, resourceId: String) {
         val userId: Int? = resourceId.toIntOrNull()
         if (userId == null) {
