@@ -11,4 +11,4 @@ EXPOSE 8080
 
 CMD ["java", "-jar", "server.jar"]
 
-HEALTHCHECK --interval=15s --timeout=2s --retries=12 CMD curl --fail localhost:8080 || exit 1
+HEALTHCHECK --interval=15s --timeout=2s --retries=12 CMD curl --fail localhost:8080/status || exit 1

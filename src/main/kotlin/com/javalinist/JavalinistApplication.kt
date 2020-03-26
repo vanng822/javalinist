@@ -1,5 +1,6 @@
 package com.javalinist
 
+import com.javalinist.handlers.StatusHandler
 import com.javalinist.handlers.UserHandler
 import com.javalinist.handlers.UserSseHandler
 import com.javalinist.logic.DB
@@ -38,6 +39,9 @@ fun main() {
         ApiBuilder.sse("/sse/users", { client ->
             sseHandler.handle(client)
         })
+
+        // status check
+        ApiBuilder.get("/status", StatusHandler())
 
         // Web
         ApiBuilder.get("/", IndexHandler())
