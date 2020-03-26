@@ -14,7 +14,7 @@ import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 
 
-class UserHandler: BaseHandler, CrudHandler {
+class UserHandler : BaseHandler, CrudHandler {
     private val users: UserBroadcast = UserBroadcast.getInstance()
 
     override fun getAll(ctx: Context) {
@@ -40,7 +40,11 @@ class UserHandler: BaseHandler, CrudHandler {
     }
 
     @OpenApi(
-        queryParams = [OpenApiParam(name = "name", required = true)]
+        queryParams = [OpenApiParam(
+            name = "name",
+            required = true,
+            description = "Allowed chars: a-zA-Z0-9 and whitespace"
+        )]
     )
     override fun create(ctx: Context) {
         val name = validateName(ctx)
@@ -64,7 +68,11 @@ class UserHandler: BaseHandler, CrudHandler {
     }
 
     @OpenApi(
-        queryParams = [OpenApiParam(name = "name", required = true)]
+        queryParams = [OpenApiParam(
+            name = "name",
+            required = true,
+            description = "Allowed chars: a-zA-Z0-9 and whitespace"
+        )]
     )
     override fun update(ctx: Context, resourceId: String) {
         val userId: Int? = resourceId.toIntOrNull()
@@ -78,7 +86,7 @@ class UserHandler: BaseHandler, CrudHandler {
             return
         }
 
-        var user:User
+        var user: User
         try {
             user = users.findUser(userId)
         } catch (exc: EntityNotFoundException) {
@@ -115,8 +123,8 @@ class UserHandler: BaseHandler, CrudHandler {
 }
 
 fun Validator<String>.validateName(): Validator<String> {
-    this.check({it.length < 100})
-    this.check({it.length > 1})
-    this.check({it.matches(Regex("^[a-zA-Z0-9]+( +[a-zA-Z0-9]+)*"))})
+    this.check({ it.length < 100 })
+    this.check({ it.length > 1 })
+    this.check({ it.matches(Regex("^[a-zA-Z0-9]+( +[a-zA-Z0-9]+)*")) })
     return this
 }
