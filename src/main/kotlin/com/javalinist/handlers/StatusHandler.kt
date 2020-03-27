@@ -10,8 +10,11 @@ import java.util.concurrent.TimeUnit
 
 class StatusHandler: Handler {
     override fun handle(ctx: Context) {
+        ctx.json(object {
+            val status = ResponseStatus.OK
+        })
         // response with CompletableFuture
-        ctx.json(fakeDoingSomethingUselessSlow())
+        //ctx.json(fakeDoingSomethingUselessSlow())
     }
 
     private fun fakeDoingSomethingUselessSlow(): CompletableFuture<Any> {
