@@ -9,22 +9,20 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class StatusHandler: Handler {
+    val executors = Executors.newFixedThreadPool(2)
+
     override fun handle(ctx: Context) {
-        ctx.json(object {
-            val status = ResponseStatus.OK
-        })
         // response with CompletableFuture
-        //ctx.json(fakeDoingSomethingUselessSlow())
+        ctx.json(fakeDoingSomethingUselessSlow())
     }
 
     private fun fakeDoingSomethingUselessSlow(): CompletableFuture<Any> {
         return CompletableFuture<Any>().apply {
-            Executors.newSingleThreadScheduledExecutor().schedule({
+            executors.submit {
                 this.complete(object {
                     val status = ResponseStatus.OK
-                })},
-                0,
-                TimeUnit.SECONDS)
+                })
+            }
         }
     }
 }
