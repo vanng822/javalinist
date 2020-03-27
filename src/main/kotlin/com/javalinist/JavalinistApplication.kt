@@ -25,6 +25,7 @@ fun main() {
             .ignorePath("/sse")
             .ignorePath("/sse/users")
             .ignorePath("/")
+            .ignorePath("/status")
             .swagger(SwaggerOptions("/swagger"))
     }
 
