@@ -16,43 +16,56 @@ import io.swagger.v3.oas.models.info.Info
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun main() {
+private  fun getOpenApiOptions(): OpenApiOptions {
+    val applicationInfo = Info().version("1.0").description("For testong Javalin")
+    return OpenApiOptions(applicationInfo)
+        .path("/swagger-docs")
+        .ignorePath("/sse")
+        .ignorePath("/sse/users")
+        .ignorePath("/")
+        .ignorePath("/status")
+        .swagger(SwaggerOptions("/swagger"))
+}
 
-    fun getOpenApiOptions(): OpenApiOptions {
-        val applicationInfo = Info().version("1.0").description("For testong Javalin")
-        return OpenApiOptions(applicationInfo)
-            .path("/swagger-docs")
-            .ignorePath("/sse")
-            .ignorePath("/sse/users")
-            .ignorePath("/")
-            .ignorePath("/status")
-            .swagger(SwaggerOptions("/swagger"))
-    }
-
-    val app = Javalin.create { config ->
-        config.defaultContentType = "application/json"
-        config.enableDevLogging()
-        config.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
-    }.routes {
-
-        ApiBuilder.crud("/users/:id", UserHandler())
-        val sseHandler = UserSseHandler()
-        ApiBuilder.sse("/sse/users", { client ->
-            sseHandler.handle(client)
-        })
-
-        // status check
-        ApiBuilder.get("/status", StatusHandler())
-
-        // Web
-        ApiBuilder.get("/", IndexHandler())
-        ApiBuilder.get("/sse", SseWebHandler())
-    }
-
-    DB.run {
-        transaction {
-            SchemaUtils.create(users_table)
+class JavalinistApplication {
+    val app: Javalin by lazy {
+        val app = Javalin.create { config ->
+            config.defaultContentType = "application/json"
+            config.enableDevLogging()
+            config.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
         }
+        app
     }
-    app.start(8080)
+
+    fun start(port: Int = 8080) {
+        app.routes {
+            ApiBuilder.crud("/users/:id", UserHandler())
+            val sseHandler = UserSseHandler()
+            ApiBuilder.sse("/sse/users", { client ->
+                sseHandler.handle(client)
+            })
+
+            // status check
+            ApiBuilder.get("/status", StatusHandler())
+
+            // Web
+            ApiBuilder.get("/", IndexHandler())
+            ApiBuilder.get("/sse", SseWebHandler())
+        }
+
+        DB.run {
+            transaction {
+                SchemaUtils.create(users_table)
+            }
+        }
+        app.start(port)
+    }
+
+    fun stop() {
+        app.stop()
+    }
+}
+
+fun main() {
+    JavalinistApplication().start()
 }

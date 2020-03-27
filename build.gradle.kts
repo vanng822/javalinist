@@ -36,6 +36,10 @@ dependencies {
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1")
     compile("cc.vileda:kotlin-openapi3-dsl:0.20.2")
     compile("org.webjars:swagger-ui:3.24.3")
+    // testing
+    testImplementation("org.junit.jupiter:junit-jupiter:5.4.1")
+    testImplementation("com.konghq:unirest-java:3.4.00")
+    testImplementation("org.assertj:assertj-core:3.11.1")
 }
 
 application {
