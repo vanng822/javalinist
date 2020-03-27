@@ -22,8 +22,11 @@ DOCKER_PORT_FORWARD_ARGS :=
 endif
 
 .PHONY: build
-build: build-jar
+build: build-jar test
 	$(DOCKER) build --build-arg TAG_VERSION=$(TAG_VERSION) -t $(image_tag) .
+
+test:
+	./gradlew test
 
 run:
 	$(DOCKER) run --restart=always --network raspberrypi3_default \
