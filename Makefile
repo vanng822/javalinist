@@ -52,7 +52,7 @@ release:
 
 .PHONY: build-jar
 build-jar:
-	./gradlew build
+	./gradlew build --no-daemon
 
 bash: CONTAINER_ID=$(shell $(DOCKER) ps -f name=$(name) -q)
 bash:
