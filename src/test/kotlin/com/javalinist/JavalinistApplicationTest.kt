@@ -52,7 +52,6 @@ class UsersTest {
 
     @Test
     fun `BetterWayButNotNow4`() {
-        Thread.sleep(1000L)
         val response = Unirest.get("http://localhost:8080/users")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
         val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
@@ -63,7 +62,6 @@ class UsersTest {
 
     @Test
     fun `BetterWayButNotNow5`() {
-        Thread.sleep(1000L)
         val response = Unirest.delete("http://localhost:8080/users/1")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
         val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
@@ -73,7 +71,6 @@ class UsersTest {
 
     @Test
     fun `BetterWayButNotNow6`() {
-        Thread.sleep(1000L)
         val response = Unirest.get("http://localhost:8080/users")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
         val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
