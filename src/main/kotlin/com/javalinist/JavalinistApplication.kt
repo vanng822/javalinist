@@ -40,7 +40,7 @@ class JavalinistApplication {
                 config.enableDevLogging()
             } else {
                 config.requestLogger { ctx, executionTimeMs ->
-                    logger.info("${ctx.method()} ${ctx.path()} -> ${ctx.res.status} [${ctx.res.contentType}] (took ${executionTimeMs} ms)\n")
+                    logger.info("${ctx.method()} ${ctx.path()} -> ${ctx.res.status} [${ctx.res.contentType}] (took ${executionTimeMs} ms)")
                 }
             }
             config.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
