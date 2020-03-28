@@ -73,12 +73,12 @@ open class Users {
     }
 
     fun findUser(userId: Int): User {
-        var user: DbUser? = null
+        lateinit var user: DbUser
 
         transaction {
             user = DbUser.get(userId)
         }
-        return User(user!!.id.value, user!!.name)
+        return User(user.id.value, user.name)
     }
 
     fun findUser(name: String): User {
@@ -107,13 +107,13 @@ open class Users {
 
     open fun createUser(name: String): User {
         checkSize()
-        var user: DbUser? = null
+        lateinit var user: DbUser
         transaction {
             user = DbUser.new {
                 this.name = fixName(name)
             }
         }
 
-        return User(user!!.id.value.toInt(), user!!.name)
+        return User(user.id.value.toInt(), user.name)
     }
 }
