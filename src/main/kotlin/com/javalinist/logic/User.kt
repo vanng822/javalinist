@@ -114,6 +114,6 @@ open class Users {
             }
         }
 
-        return User(user.id.value.toInt(), user.name)
+        return User(user.id.value, user.name)
     }
 }
