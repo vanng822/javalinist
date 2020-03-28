@@ -1,16 +1,28 @@
 package com.javalinist.logic
 
 import com.javalinist.models.User
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
+import java.util.logging.Logger
+import kotlin.concurrent.timerTask
 
 
 open class Users {
 
-    val maxSize: Int = 1000
+    private val logger = Logger.getLogger(Users::class.java.name)
+
+    var maxSize: Int = 1000
+
+    private var cleanStarted: Boolean = false
+
+    var cleanUpDelay: Long = 10000L
+    var cleanUpPeriod: Long = 10000L
 
     private fun size(): Int {
         var c: Int = 0
@@ -20,17 +32,21 @@ open class Users {
         return c
     }
 
-    private fun checkSize() {
-        if (size() > maxSize) {
+    protected fun checkSize() {
+        val size = size()
+        if (size > maxSize) {
             transaction {
-                exec("SELECT MIN(id) FROM ${users_table.tableName}", {
-                    if (it.next()) {
-                        val minUserId = it.getInt(1)
-                        if (minUserId > 0) {
-                            DbUser.get(minUserId).delete()
+                repeat(size - maxSize) {
+                    exec("SELECT MIN(id) FROM ${users_table.tableName}", {
+                        if (it.next()) {
+                            val minUserId = it.getInt(1)
+                            logger.info("Cleaning user ${minUserId}")
+                            if (minUserId > 0) {
+                                DbUser.get(minUserId).delete()
+                            }
                         }
-                    }
-                })
+                    })
+                }
             }
         }
     }
@@ -106,7 +122,6 @@ open class Users {
     }
 
     open fun createUser(name: String): User {
-        checkSize()
         lateinit var user: DbUser
         transaction {
             user = DbUser.new {
@@ -115,5 +130,24 @@ open class Users {
         }
 
         return User(user.id.value, user.name)
+    }
+
+    @Synchronized()
+    fun cleanUp() {
+        if (cleanStarted) {
+            return
+        }
+        cleanStarted = true
+
+        GlobalScope.launch {
+            val timer = Timer()
+            timer.schedule(
+                timerTask {
+                    logger.info("Cleaning by checkSize")
+                    checkSize()
+                },
+                cleanUpDelay, cleanUpPeriod
+            )
+        }
     }
 }
