@@ -16,6 +16,7 @@ import io.javalin.plugin.openapi.ui.SwaggerOptions
 import io.swagger.v3.oas.models.info.Info
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.logging.Logger
 
 private  fun getOpenApiOptions(): OpenApiOptions {
     val applicationInfo = Info().version("1.0").description("For testong Javalin")
@@ -29,10 +30,19 @@ private  fun getOpenApiOptions(): OpenApiOptions {
 }
 
 class JavalinistApplication {
+    private val logger = Logger.getLogger(JavalinistApplication::class.java.name)
+
     val app: Javalin by lazy {
         val app = Javalin.create { config ->
             config.defaultContentType = "application/json"
-            config.enableDevLogging()
+            // verbose everywhere except prod
+            if (System.getenv("env") != "prod") {
+                config.enableDevLogging()
+            } else {
+                config.requestLogger { ctx, executionTimeMs ->
+                    logger.info("${ctx.method()} ${ctx.path()} -> ${ctx.res.status} [${ctx.res.contentType}] (took ${executionTimeMs} ms)\n")
+                }
+            }
             config.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
         }
         app

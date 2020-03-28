@@ -2,6 +2,8 @@ ARG TAG_VERSION=openjdk:8-jre
 
 FROM arm32v7/${TAG_VERSION}
 
+ENV env "prod"
+
 WORKDIR /app
 
 ADD ./README.md README.md
