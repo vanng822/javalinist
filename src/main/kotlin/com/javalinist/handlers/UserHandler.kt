@@ -4,7 +4,6 @@ import com.javalinist.enums.ResponseStatus
 import com.javalinist.logic.UserBroadcast
 import com.javalinist.models.User
 import com.javalinist.validators.UserValidator
-import com.javalinist.validators.validate
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.http.Context
 import io.javalin.plugin.openapi.annotations.OpenApi
@@ -116,9 +115,8 @@ class UserHandler : BaseHandler, CrudHandler {
     }
 
     private fun validateName(ctx: Context): String {
-        val v = ctx.bodyValidator<UserValidator>()
-        val input = v.validate()
-        return input.name
+        val v = ctx.bodyAsClass(UserValidator::class.java).validate()
+        return v.name
     }
 }
 
