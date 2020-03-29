@@ -10,6 +10,7 @@ import com.javalinist.web_handlers.IndexHandler
 import com.javalinist.web_handlers.SseWebHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
+import io.javalin.core.validation.JavalinValidation
 import io.javalin.plugin.openapi.OpenApiOptions
 import io.javalin.plugin.openapi.OpenApiPlugin
 import io.javalin.plugin.openapi.ui.SwaggerOptions
