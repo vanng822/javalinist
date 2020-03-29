@@ -20,23 +20,23 @@ class UserHandler : BaseHandler, CrudHandler {
     override fun getAll(ctx: Context) {
         val sortBy = ctx.queryParam("sortBy")
         val order = ctx.queryParam("order")
-        response(ctx, 200, ResponseStatus.OK, users.sort(sortBy, order))
+        response(ctx, 200, UsersResponse(ResponseStatus.OK, users.sort(sortBy, order)))
     }
 
     override fun getOne(ctx: Context, resourceId: String) {
         val userId: Int? = resourceId.toIntOrNull()
         if (userId == null) {
-            response(ctx, 400, ResponseStatus.INVALID)
+            response(ctx, 400, NullResponse(ResponseStatus.INVALID))
             return
         }
         val user: User
         try {
             user = users.findUser(userId)
         } catch (exc: EntityNotFoundException) {
-            response(ctx, 404, ResponseStatus.NOT_FOUND)
+            response(ctx, 404, NullResponse(ResponseStatus.NOT_FOUND))
             return
         }
-        response(ctx, 200, ResponseStatus.OK, user)
+        response(ctx, 200, UserResponse(ResponseStatus.OK, user))
     }
 
     @OpenApi(
@@ -49,7 +49,7 @@ class UserHandler : BaseHandler, CrudHandler {
     override fun create(ctx: Context) {
         val name = validateName(ctx)
         if (name == null || name == "") {
-            response(ctx, 400, ResponseStatus.INVALID)
+            response(ctx, 400, NullResponse(ResponseStatus.INVALID))
             return
         }
 
@@ -58,13 +58,13 @@ class UserHandler : BaseHandler, CrudHandler {
             user = users.createUser(name)
         } catch (exc: ExposedSQLException) {
             if (exc.cause is JdbcBatchUpdateException || exc.cause is JdbcSQLIntegrityConstraintViolationException) {
-                response(ctx, 409, ResponseStatus.INVALID)
+                response(ctx, 409, NullResponse(ResponseStatus.INVALID))
                 return
             }
             throw exc
         }
 
-        response(ctx, 201, ResponseStatus.OK, user)
+        response(ctx, 201, UserResponse(ResponseStatus.OK, user))
     }
 
     @OpenApi(
@@ -77,12 +77,12 @@ class UserHandler : BaseHandler, CrudHandler {
     override fun update(ctx: Context, resourceId: String) {
         val userId: Int? = resourceId.toIntOrNull()
         if (userId == null) {
-            response(ctx, 400, ResponseStatus.INVALID)
+            response(ctx, 400, NullResponse(ResponseStatus.INVALID))
             return
         }
         val name = validateName(ctx)
         if (name == null || name == "") {
-            response(ctx, 400, ResponseStatus.INVALID)
+            response(ctx, 400, NullResponse(ResponseStatus.INVALID))
             return
         }
 
@@ -90,16 +90,16 @@ class UserHandler : BaseHandler, CrudHandler {
         try {
             user = users.findUser(userId)
         } catch (exc: EntityNotFoundException) {
-            response(ctx, 404, ResponseStatus.NOT_FOUND, object {
+            response(ctx, 404, AnyResponse(ResponseStatus.NOT_FOUND, object {
                 val id = userId
-            })
+            }))
             return
         }
         try {
             users.updateUser(user, name)
         } catch (exc: ExposedSQLException) {
             if (exc.cause is JdbcSQLIntegrityConstraintViolationException) {
-                response(ctx, 409, ResponseStatus.INVALID)
+                response(ctx, 409, NullResponse(ResponseStatus.INVALID))
                 return
             }
             throw exc
@@ -110,7 +110,7 @@ class UserHandler : BaseHandler, CrudHandler {
     override fun delete(ctx: Context, resourceId: String) {
         val userId: Int? = resourceId.toIntOrNull()
         if (userId == null) {
-            response(ctx, 400, ResponseStatus.INVALID)
+            response(ctx, 400, NullResponse(ResponseStatus.INVALID))
             return
         }
         users.removeUser(userId)
