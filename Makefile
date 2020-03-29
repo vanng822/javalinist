@@ -22,7 +22,7 @@ DOCKER_PORT_FORWARD_ARGS :=
 endif
 
 .PHONY: build
-build:
+build: build-jar test
 	$(DOCKER) build --build-arg TAG_VERSION=$(TAG_VERSION) -t $(image_tag) .
 
 test:
