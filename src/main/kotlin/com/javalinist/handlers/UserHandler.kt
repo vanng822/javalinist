@@ -25,11 +25,7 @@ class UserHandler : BaseHandler, CrudHandler {
     }
 
     override fun getOne(ctx: Context, resourceId: String) {
-        val userId: Int? = resourceId.toIntOrNull()
-        if (userId == null) {
-            response(ctx, 400, NullResponse(ResponseStatus.INVALID))
-            return
-        }
+        val userId: Int = ctx.pathParam<Int>("id").get()
         val user: User
         try {
             user = users.findUser(userId)
@@ -50,11 +46,11 @@ class UserHandler : BaseHandler, CrudHandler {
         )
     )
     override fun create(ctx: Context) {
-        val name = validateName(ctx)
+        val input = ctx.bodyAsClass(UserValidator::class.java).validate()
 
         var user: User
         try {
-            user = users.createUser(name)
+            user = users.createUser(input.name)
         } catch (exc: ExposedSQLException) {
             if (exc.cause is JdbcBatchUpdateException || exc.cause is JdbcSQLIntegrityConstraintViolationException) {
                 response(ctx, 409, NullResponse(ResponseStatus.INVALID))
@@ -76,12 +72,8 @@ class UserHandler : BaseHandler, CrudHandler {
         )
     )
     override fun update(ctx: Context, resourceId: String) {
-        val userId: Int? = resourceId.toIntOrNull()
-        if (userId == null) {
-            response(ctx, 400, NullResponse(ResponseStatus.INVALID))
-            return
-        }
-        val name = validateName(ctx)
+        val userId: Int = ctx.pathParam<Int>("id").get()
+        val input = ctx.bodyAsClass(UserValidator::class.java).validate()
 
         var user: User
         try {
@@ -93,7 +85,7 @@ class UserHandler : BaseHandler, CrudHandler {
             return
         }
         try {
-            users.updateUser(user, name)
+            users.updateUser(user, input.name)
         } catch (exc: ExposedSQLException) {
             if (exc.cause is JdbcSQLIntegrityConstraintViolationException) {
                 response(ctx, 409, NullResponse(ResponseStatus.INVALID))
@@ -105,18 +97,9 @@ class UserHandler : BaseHandler, CrudHandler {
     }
 
     override fun delete(ctx: Context, resourceId: String) {
-        val userId: Int? = resourceId.toIntOrNull()
-        if (userId == null) {
-            response(ctx, 400, NullResponse(ResponseStatus.INVALID))
-            return
-        }
+        val userId: Int = ctx.pathParam<Int>("id").get()
         users.removeUser(userId)
         response(ctx)
-    }
-
-    private fun validateName(ctx: Context): String {
-        val v = ctx.bodyAsClass(UserValidator::class.java).validate()
-        return v.name
     }
 }
 
