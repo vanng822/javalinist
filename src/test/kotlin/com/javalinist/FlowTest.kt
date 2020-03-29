@@ -81,4 +81,10 @@ class UsersTest {
         Assertions.assertThat(users.status).isEqualTo("OK")
         Assertions.assertThat(users.result).isEmpty()
     }
+
+    @Test
+    fun `BetterWayButNotNow7`() {
+        val response = Unirest.get("http://localhost:${port}/users/1")
+        Assertions.assertThat(response.asEmpty().status).isEqualTo(404)
+    }
 }
