@@ -32,7 +32,8 @@ class UsersTest {
 
     @Test
     fun `BetterWayButNotNow1`() {
-        val response = Unirest.post("http://localhost:${port}/users?name=Nguyen")
+        val response = Unirest.post("http://localhost:${port}/users")
+            .body("{\"name\":\"Nguyen\"}")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(201)
     }
 
@@ -48,7 +49,8 @@ class UsersTest {
 
     @Test
     fun `BetterWayButNotNow3`() {
-        val response = Unirest.patch("http://localhost:${port}/users/1?name=Van")
+        val response = Unirest.patch("http://localhost:${port}/users/1")
+            .body("{\"name\":\"Van\"}")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
     }
 
