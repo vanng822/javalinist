@@ -1,13 +1,24 @@
 ARG TAG_VERSION=openjdk:8-jre
+FROM gradle AS build
 
-FROM arm32v7/${TAG_VERSION}
+WORKDIR /app
+
+ADD . .
+
+RUN gradle build
+
+FROM build AS test
+
+RUN gradle test
+
+FROM arm32v7/${TAG_VERSION} AS prod
 
 ENV env "prod"
 
 WORKDIR /app
 
-ADD ./README.md README.md
-ADD ./build/libs/javalinist-1.0-all.jar javalinist-1.0.jar
+COPY --from=build /app/README.md README.md
+COPY --from=build /app/build/libs/javalinist-1.0-all.jar javalinist-1.0.jar
 
 EXPOSE 8080
 
