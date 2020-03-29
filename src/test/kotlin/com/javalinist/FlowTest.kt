@@ -12,7 +12,7 @@ data class TestUsersResponse(val status: String, val result: List<User>)
 data class TestUserResponse(val status: String, val result: User)
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName("Users API")
+@DisplayName("Users API - Flow")
 @FixMethodOrder(MethodSorters.JVM)
 class UsersTest {
 
@@ -80,39 +80,5 @@ class UsersTest {
         val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
         Assertions.assertThat(users.status).isEqualTo("OK")
         Assertions.assertThat(users.result).isEmpty()
-    }
-
-    @Test
-    fun `Get user with none Int for id should get 400`() {
-        val response = Unirest.get("http://localhost:${port}/users/blabla")
-        Assertions.assertThat(response.asEmpty().status).isEqualTo(400)
-    }
-
-    @Test
-    fun `Delete user with none Int for id should get 400`() {
-        val response = Unirest.delete("http://localhost:${port}/users/blabla")
-        Assertions.assertThat(response.asEmpty().status).isEqualTo(400)
-    }
-
-    @Test
-    fun `Create user with invalid chars for name should get 400`() {
-        val response = Unirest.post("http://localhost:${port}/users")
-            .body("{\"name\":\"åäö\"}")
-        Assertions.assertThat(response.asEmpty().status).isEqualTo(400)
-    }
-
-    @Test
-    fun `Create user with empty name should get 400`() {
-        val response = Unirest.post("http://localhost:${port}/users")
-            .body("{\"name\":\"\"}")
-        Assertions.assertThat(response.asEmpty().status).isEqualTo(400)
-    }
-
-    @Test
-    fun `Create user with name longer than 99 should get 400`() {
-        val name = "n".repeat(100)
-        val response = Unirest.post("http://localhost:${port}/users")
-            .body("{\"name\":\"${name}\"}")
-        Assertions.assertThat(response.asEmpty().status).isEqualTo(400)
     }
 }
