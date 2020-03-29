@@ -19,8 +19,8 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.logging.Logger
 
-private  fun getOpenApiOptions(): OpenApiOptions {
-    val applicationInfo = Info().version("1.0").description("For testong Javalin")
+private fun getOpenApiOptions(): OpenApiOptions {
+    val applicationInfo = Info().version("1.0").description("For testing Javalin")
     return OpenApiOptions(applicationInfo)
         .path("/swagger-docs")
         .ignorePath("/sse")
@@ -37,12 +37,12 @@ class JavalinistApplication {
         val app = Javalin.create { config ->
             config.defaultContentType = "application/json"
             // verbose everywhere except prod
-            if (System.getenv("env") != "prod") {
-                config.enableDevLogging()
-            } else {
+            if (System.getenv("env") == "prod") {
                 config.requestLogger { ctx, executionTimeMs ->
                     logger.info("${ctx.method()} ${ctx.path()} -> ${ctx.res.status} [${ctx.res.contentType}] (took ${executionTimeMs} ms)")
                 }
+            } else {
+                config.enableDevLogging()
             }
             config.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
         }
