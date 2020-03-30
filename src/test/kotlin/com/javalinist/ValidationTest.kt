@@ -11,6 +11,7 @@ import kotlin.random.Random
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Users API - Validation")
 @FixMethodOrder(MethodSorters.JVM)
+@Tag("validation")
 class UsersValidationTest {
 
     private lateinit var app: JavalinistApplication
