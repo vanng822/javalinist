@@ -4,6 +4,7 @@ import com.javalinist.models.User
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
+import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -55,20 +56,12 @@ open class Users {
         var users: MutableList<User> = mutableListOf()
         transaction {
             var query = users_table.selectAll()
-            // insane difficult; what did I miss
-            if (sortBy == "name") {
-                if (order == "desc") {
-                    query.orderBy(users_table.name to SortOrder.DESC)
-                } else {
-                    query.orderBy(users_table.name to SortOrder.ASC)
-                }
-            } else {
-                if (order == "desc") {
-                    query.orderBy(users_table.id to SortOrder.DESC)
-                } else {
-                    query.orderBy(users_table.id to SortOrder.ASC)
-                }
-            }
+
+            val sortColumn: Expression<*> = if (sortBy == "name") users_table.name else users_table.id
+            val sortOrder: SortOrder = if (order == "desc") SortOrder.DESC else SortOrder.ASC
+
+            query.orderBy(sortColumn, sortOrder)
+
             query.forEach {
                 users.add(User(it[users_table.id].value, it[users_table.name]))
             }

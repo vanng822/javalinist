@@ -14,7 +14,7 @@ import kotlin.random.Random
 class UsersValidationTest {
 
     private lateinit var app: JavalinistApplication
-    private var port = Random.nextInt(6000, 6100)
+    private var port = 5003
 
     @BeforeAll
     fun setUp() {

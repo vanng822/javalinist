@@ -8,6 +8,7 @@ import io.javalin.apibuilder.CrudHandler
 import io.javalin.http.Context
 import io.javalin.plugin.openapi.annotations.OpenApi
 import io.javalin.plugin.openapi.annotations.OpenApiContent
+import io.javalin.plugin.openapi.annotations.OpenApiParam
 import io.javalin.plugin.openapi.annotations.OpenApiRequestBody
 import org.h2.jdbc.JdbcBatchUpdateException
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
@@ -18,6 +19,16 @@ import org.jetbrains.exposed.exceptions.ExposedSQLException
 class UserHandler : BaseHandler, CrudHandler {
     private val users: UserBroadcast = UserBroadcast.getInstance()
 
+    @OpenApi(
+        queryParams = [
+            OpenApiParam(
+                name = "sortBy"
+            ),
+            OpenApiParam(
+                name = "order"
+            )
+        ]
+    )
     override fun getAll(ctx: Context) {
         val sortBy = ctx.queryParam("sortBy")
         val order = ctx.queryParam("order")

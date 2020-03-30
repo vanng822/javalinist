@@ -1,8 +1,12 @@
 package com.javalinist
 
+import com.javalinist.logic.UserBroadcast
+import com.javalinist.logic.Users
+import com.javalinist.logic.users_table
 import com.javalinist.models.User
 import kong.unirest.Unirest
 import org.assertj.core.api.Assertions
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.FixMethodOrder
 import org.junit.jupiter.api.*
 import org.junit.runners.MethodSorters
@@ -11,13 +15,14 @@ import kotlin.random.Random
 data class TestUsersResponse(val status: String, val result: List<User>)
 data class TestUserResponse(val status: String, val result: User)
 
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Users API - Flow")
-@FixMethodOrder(MethodSorters.JVM)
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class UsersTest {
 
     private lateinit var app: JavalinistApplication
-    private var port = Random.nextInt(6000, 6100)
+    private var port = 5001
 
     @BeforeAll
     fun setUp() {
@@ -31,14 +36,16 @@ class UsersTest {
     }
 
     @Test
-    fun `BetterWayButNotNow1`() {
+    @Order(1)
+    fun `Create should give 201`() {
         val response = Unirest.post("http://localhost:${port}/users")
             .body("{\"name\":\"Nguyen\"}")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(201)
     }
 
     @Test
-    fun `BetterWayButNotNow2`() {
+    @Order(2)
+    fun `Get user should give newly created user`() {
         val response = Unirest.get("http://localhost:${port}/users/1")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
         val user: TestUserResponse = response.asObject(TestUserResponse::class.java).getBody()
@@ -48,14 +55,16 @@ class UsersTest {
     }
 
     @Test
-    fun `BetterWayButNotNow3`() {
+    @Order(3)
+    fun `Patch user with new name should give 200`() {
         val response = Unirest.patch("http://localhost:${port}/users/1")
             .body("{\"name\":\"Van\"}")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
     }
 
     @Test
-    fun `BetterWayButNotNow4`() {
+    @Order(4)
+    fun `Get users should content 1 user with new name`() {
         val response = Unirest.get("http://localhost:${port}/users")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
         val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
@@ -65,7 +74,8 @@ class UsersTest {
     }
 
     @Test
-    fun `BetterWayButNotNow5`() {
+    @Order(5)
+    fun `Delete from user should get OK`() {
         val response = Unirest.delete("http://localhost:${port}/users/1")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
         val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
@@ -74,7 +84,8 @@ class UsersTest {
     }
 
     @Test
-    fun `BetterWayButNotNow6`() {
+    @Order(6)
+    fun `List after deletion should be empty list`() {
         val response = Unirest.get("http://localhost:${port}/users")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
         val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
@@ -83,8 +94,27 @@ class UsersTest {
     }
 
     @Test
-    fun `BetterWayButNotNow7`() {
+    @Order(7)
+    fun `Get after deletion should get 404`() {
         val response = Unirest.get("http://localhost:${port}/users/1")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(404)
+    }
+
+    @Test
+    @Order(8)
+    fun `Sort by name desc`() {
+        val resp1 = Unirest.post("http://localhost:${port}/users")
+            .body("{\"name\":\"Nguyen\"}")
+        Assertions.assertThat(resp1.asEmpty().status).isEqualTo(201)
+        val resp2 = Unirest.post("http://localhost:${port}/users")
+            .body("{\"name\":\"Van\"}")
+        Assertions.assertThat(resp2.asEmpty().status).isEqualTo(201)
+
+        var response2 = Unirest.get("http://localhost:${port}/users?sortBy=name&order=desc")
+        Assertions.assertThat(response2.asEmpty().status).isEqualTo(200)
+        var users: TestUsersResponse = response2.asObject(TestUsersResponse::class.java).getBody()
+        Assertions.assertThat(users.status).isEqualTo("OK")
+        var expected: List<User> = listOf(User(3, "Van"), User(2, "Nguyen"))
+        Assertions.assertThat(users.result).isEqualTo(expected)
     }
 }
