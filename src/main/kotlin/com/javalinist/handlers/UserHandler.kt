@@ -1,9 +1,11 @@
 package com.javalinist.handlers
 
+import com.javalinist.enums.OrderOptions
 import com.javalinist.enums.ResponseStatus
+import com.javalinist.enums.SortByOptions
 import com.javalinist.logic.UserBroadcast
 import com.javalinist.models.User
-import com.javalinist.validators.UserValidator
+import com.javalinist.validators.*
 import io.javalin.apibuilder.CrudHandler
 import io.javalin.http.Context
 import io.javalin.plugin.openapi.annotations.OpenApi
@@ -22,16 +24,18 @@ class UserHandler : BaseHandler, CrudHandler {
     @OpenApi(
         queryParams = [
             OpenApiParam(
-                name = "sortBy"
+                name = "sortBy",
+                type = SortByOptions::class
             ),
             OpenApiParam(
-                name = "order"
+                name = "order",
+                type = OrderOptions::class
             )
         ]
     )
     override fun getAll(ctx: Context) {
-        val sortBy = ctx.queryParam("sortBy")
-        val order = ctx.queryParam("order")
+        val sortBy = ctx.queryParam<SortByOptions>("sortBy", SortByOptions.NAME.toString()).get()
+        val order = ctx.queryParam<OrderOptions>("order", OrderOptions.DESC.toString()).get()
         response(ctx, 200, UsersResponse(ResponseStatus.OK, users.sort(sortBy, order)))
     }
 

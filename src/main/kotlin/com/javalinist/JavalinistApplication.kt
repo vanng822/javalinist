@@ -6,6 +6,7 @@ import com.javalinist.handlers.UserSseHandler
 import com.javalinist.logic.DB
 import com.javalinist.logic.UserBroadcast
 import com.javalinist.logic.users_table
+import com.javalinist.validators.registerValidators
 import com.javalinist.web_handlers.IndexHandler
 import com.javalinist.web_handlers.SseWebHandler
 import io.javalin.Javalin
@@ -45,6 +46,8 @@ class JavalinistApplication {
             }
             config.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
         }
+
+        registerValidators()
 
         app
     }

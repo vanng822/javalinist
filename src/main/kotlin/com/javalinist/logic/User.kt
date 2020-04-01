@@ -1,5 +1,7 @@
 package com.javalinist.logic
 
+import com.javalinist.enums.OrderOptions
+import com.javalinist.enums.SortByOptions
 import com.javalinist.models.User
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -52,13 +54,13 @@ open class Users {
         }
     }
 
-    fun sort(sortBy: String?, order: String?): List<User> {
+    fun sort(sortBy: SortByOptions, order: OrderOptions): List<User> {
         var users: MutableList<User> = mutableListOf()
         transaction {
             var query = users_table.selectAll()
 
-            val sortColumn: Expression<*> = if (sortBy == "name") users_table.name else users_table.id
-            val sortOrder: SortOrder = if (order == "desc") SortOrder.DESC else SortOrder.ASC
+            val sortColumn: Expression<*> = if (sortBy == SortByOptions.NAME) users_table.name else users_table.id
+            val sortOrder: SortOrder = if (order == OrderOptions.DESC) SortOrder.DESC else SortOrder.ASC
 
             query.orderBy(sortColumn, sortOrder)
 
