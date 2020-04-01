@@ -27,6 +27,10 @@ open class Users {
     var cleanUpDelay: Long = 10000L
     var cleanUpPeriod: Long = 10000L
 
+    private val sortByOptions: Map<SortByOptions, Expression<*>> = mapOf(
+        SortByOptions.NAME to users_table.name,
+        SortByOptions.ID to users_table.id)
+
     private fun size(): Int {
         var c: Int = 0
         transaction {
@@ -54,16 +58,18 @@ open class Users {
         }
     }
 
+    protected fun getSortBy(sortBy: SortByOptions): Expression<*> {
+        return sortByOptions.getOrDefault(sortBy, users_table.id)
+    }
+
     fun sort(sortBy: SortByOptions, order: OrderOptions): List<User> {
         var users: MutableList<User> = mutableListOf()
+        val sortColumn: Expression<*> = getSortBy(sortBy)
+        val sortOrder: SortOrder = if (order == OrderOptions.DESC) SortOrder.DESC else SortOrder.ASC
+
         transaction {
             var query = users_table.selectAll()
-
-            val sortColumn: Expression<*> = if (sortBy == SortByOptions.NAME) users_table.name else users_table.id
-            val sortOrder: SortOrder = if (order == OrderOptions.DESC) SortOrder.DESC else SortOrder.ASC
-
             query.orderBy(sortColumn, sortOrder)
-
             query.forEach {
                 users.add(User(it[users_table.id].value, it[users_table.name]))
             }
