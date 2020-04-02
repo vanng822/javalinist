@@ -66,14 +66,15 @@ open class Users {
         var users: MutableList<User> = mutableListOf()
         val sortColumn: Expression<*> = getSortBy(sortBy)
         val sortOrder: SortOrder = if (order == OrderOptions.DESC) SortOrder.DESC else SortOrder.ASC
+        var query = users_table.selectAll()
+        query.orderBy(sortColumn, sortOrder)
 
         transaction {
-            var query = users_table.selectAll()
-            query.orderBy(sortColumn, sortOrder)
             query.forEach {
                 users.add(User(it[users_table.id].value, it[users_table.name]))
             }
         }
+
         return users.toList()
     }
 
@@ -101,10 +102,11 @@ open class Users {
     fun findUser(name: String): User {
         val fname = fixName(name)
         var userId: Int = 0
+        val query = DbUser.table.select {
+            users_table.name eq fname
+        }
+
         transaction {
-            val query = DbUser.table.select {
-                users_table.name eq fname
-            }
             var res = query.first()
             userId = res[users_table.id].value
         }
