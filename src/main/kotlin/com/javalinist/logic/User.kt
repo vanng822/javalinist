@@ -49,7 +49,7 @@ open class Users {
                             val minUserId = it.getInt(1)
                             logger.info("Cleaning user ${minUserId}")
                             if (minUserId > 0) {
-                                DbUser.get(minUserId).delete()
+                                removeUser(minUserId)
                             }
                         }
                     })
