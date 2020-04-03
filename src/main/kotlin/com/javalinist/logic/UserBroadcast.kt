@@ -42,9 +42,10 @@ class UserBroadcast private constructor(): Users() {
 
     override fun removeUser(userId: Int) {
         super.removeUser(userId)
-        // just id, no name when deleted
-        val user = User(userId, "")
+
         GlobalScope.async {
+            // just id, no name when deleted
+            val user = User(userId, "")
             logger.info("${user}")
             userEvents.send(
                 UserEvent(
