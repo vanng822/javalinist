@@ -15,9 +15,13 @@ import io.javalin.plugin.openapi.OpenApiOptions
 import io.javalin.plugin.openapi.OpenApiPlugin
 import io.javalin.plugin.openapi.ui.SwaggerOptions
 import io.swagger.v3.oas.models.info.Info
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
 import java.util.logging.Logger
+import kotlin.concurrent.timerTask
 
 private fun getOpenApiOptions(): OpenApiOptions {
     val applicationInfo = Info().version("1.0").description("For testing Javalin")
@@ -76,10 +80,23 @@ class JavalinistApplication {
         app.start(port)
 
         UserBroadcast.getInstance().cleanUp()
+        printStats()
     }
 
     fun stop() {
         app.stop()
+    }
+
+    private fun printStats() {
+        GlobalScope.launch {
+            val timer = Timer()
+            timer.schedule(
+                timerTask {
+                    logger.info("Number of running threads: ${Thread.activeCount()}")
+                },
+                10000, 10000
+            )
+        }
     }
 }
 
