@@ -17,9 +17,7 @@ class StatusHandler: Handler {
     private fun fakeDoingSomethingUselessSlow(): CompletableFuture<Any> {
         return CompletableFuture<Any>().apply {
             executors.submit {
-                this.complete(object {
-                    val status = ResponseStatus.OK
-                })
+                this.complete(NullResponse(status = ResponseStatus.OK))
             }
         }
     }
