@@ -47,8 +47,6 @@ class JavalinistApplication {
             config.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
         }
 
-        registerValidators()
-
         app
     }
 
@@ -67,6 +65,8 @@ class JavalinistApplication {
             ApiBuilder.get("/", IndexHandler())
             ApiBuilder.get("/sse", SseWebHandler())
         }
+
+        registerValidators()
 
         DB.run {
             transaction {
