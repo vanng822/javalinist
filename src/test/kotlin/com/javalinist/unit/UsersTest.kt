@@ -14,7 +14,7 @@ import java.lang.Exception
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Users")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-internal class UsersTests: BaseTest {
+internal class UsersTest: BaseTest {
     lateinit var users: Users
     @BeforeAll
     fun setUp() {
