@@ -1,15 +1,13 @@
 package com.javalinist.logic
 
+import com.ibm.icu.impl.USerializedSet
 import com.javalinist.enums.OrderOptions
 import com.javalinist.enums.SortByOptions
 import com.javalinist.models.User
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
-import org.jetbrains.exposed.sql.Expression
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 import java.util.logging.Logger
@@ -71,7 +69,7 @@ open class Users {
 
         transaction {
             query.forEach {
-                users.add(User(it[users_table.id].value, it[users_table.name]))
+                users.add(userFromResultRow(row = it))
             }
         }
 
@@ -96,22 +94,30 @@ open class Users {
         transaction {
             user = DbUser.get(userId)
         }
-        return User(user.id.value, user.name)
+
+        return userFromDbUser(user)
     }
 
     fun findUser(name: String): User {
         val fname = fixName(name)
-        var userId: Int = 0
+        lateinit var user: User
         val query = DbUser.table.select {
             users_table.name eq fname
         }
 
         transaction {
-            var res = query.first()
-            userId = res[users_table.id].value
+            user = userFromResultRow(query.first())
         }
 
-        return User(userId, fname)
+        return user
+    }
+
+    private fun userFromResultRow(row: ResultRow): User {
+        return User(row[users_table.id].value, row[users_table.name])
+    }
+
+    private fun userFromDbUser(user: DbUser): User {
+        return User(user.id.value, user.name)
     }
 
     open fun removeUser(userId: Int) {
@@ -132,7 +138,7 @@ open class Users {
             }
         }
 
-        return User(user.id.value, user.name)
+        return userFromDbUser(user)
     }
 
     @Synchronized()
