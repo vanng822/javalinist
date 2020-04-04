@@ -18,24 +18,24 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    compile("io.javalin:javalin:3.7.0")
-    compile("org.slf4j:slf4j-simple:1.6.1")
-    compile("com.fasterxml.jackson.core:jackson-databind:2.10.1")
+    implementation("io.javalin:javalin:3.7.0")
+    implementation("org.slf4j:slf4j-simple:1.6.1")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
     // template
-    compile("org.thymeleaf:thymeleaf:3.0.9.RELEASE")
+    implementation("org.thymeleaf:thymeleaf:3.0.9.RELEASE")
     // inmemory db
-    compile("org.jetbrains.exposed", "exposed-core", "0.22.1")
-    compile("org.jetbrains.exposed", "exposed-dao", "0.22.1")
-    compile("org.jetbrains.exposed", "exposed-jdbc", "0.22.1")
-    compile("com.h2database:h2:1.4.200")
+    implementation("org.jetbrains.exposed", "exposed-core", "0.22.1")
+    implementation("org.jetbrains.exposed", "exposed-dao", "0.22.1")
+    implementation("org.jetbrains.exposed", "exposed-jdbc", "0.22.1")
+    implementation("com.h2database:h2:1.4.200")
     // markdown
-    compile("com.vladsch.flexmark:flexmark-all:0.60.2")
+    implementation("com.vladsch.flexmark:flexmark-all:0.60.2")
     // openapi
-    compile("io.swagger.core.v3:swagger-core:2.0.9")
-    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1")
-    compile("cc.vileda:kotlin-openapi3-dsl:0.20.2")
-    compile("org.webjars:swagger-ui:3.24.3")
+    implementation("io.swagger.core.v3:swagger-core:2.0.9")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1")
+    implementation("cc.vileda:kotlin-openapi3-dsl:0.20.2")
+    implementation("org.webjars:swagger-ui:3.24.3")
     // testing
     testImplementation("org.junit.jupiter:junit-jupiter:5.4.1")
     testImplementation("com.konghq:unirest-java:3.4.00")
