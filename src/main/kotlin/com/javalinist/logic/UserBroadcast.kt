@@ -27,17 +27,20 @@ class UserBroadcast private constructor(): Users() {
         return user
     }
 
-    override fun updateUser(user: User, name: String) {
-        super.updateUser(user, name)
+    override fun updateUser(user: User, name: String): User {
+        val updatedUser = super.updateUser(user, name)
+
         GlobalScope.async {
-            logger.info("${user}")
+            logger.info("${updatedUser}")
             userEvents.send(
                 UserEvent(
                     UserEventType.UPDATED,
-                    user
+                    updatedUser
                 )
             )
         }
+
+        return updatedUser
     }
 
     override fun removeUser(userId: Int) {

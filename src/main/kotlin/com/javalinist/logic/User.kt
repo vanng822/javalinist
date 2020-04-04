@@ -80,12 +80,15 @@ open class Users {
         return name.capitalize()
     }
 
-    open fun updateUser(user: User, name: String) {
-        user.name = fixName(name)
+    open fun updateUser(user: User, name: String): User {
+        lateinit var u: DbUser
+
         transaction {
-            val u = DbUser.get(user.id)
-            u.name = user.name
+            u = DbUser.get(user.id)
+            u.name = fixName(name)
         }
+
+        return userFromDbUser(u)
     }
 
     fun findUser(userId: Int): User {
