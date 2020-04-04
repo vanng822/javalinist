@@ -2,17 +2,19 @@ package com.javalinist.unit
 
 import com.javalinist.enums.OrderOptions
 import com.javalinist.enums.SortByOptions
+import com.javalinist.logic.DbUser
 import com.javalinist.logic.Users
 import com.javalinist.models.User
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.*
 import java.lang.Exception
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName("Users API")
+@DisplayName("Users")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-internal class UserTests: BaseTest {
+internal class UsersTests: BaseTest {
     lateinit var users: Users
     @BeforeAll
     fun setUp() {
