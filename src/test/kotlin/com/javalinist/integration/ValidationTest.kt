@@ -1,12 +1,15 @@
-package com.javalinist
+package com.javalinist.integration
 
-import com.javalinist.models.User
+import com.javalinist.JavalinistApplication
+import com.javalinist.logic.DB
+import com.javalinist.logic.users_table
 import kong.unirest.Unirest
 import org.assertj.core.api.Assertions
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.FixMethodOrder
 import org.junit.jupiter.api.*
 import org.junit.runners.MethodSorters
-import kotlin.random.Random
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Users API - Validation")

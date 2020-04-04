@@ -1,16 +1,14 @@
-package com.javalinist
+package com.javalinist.integration
 
-import com.javalinist.logic.UserBroadcast
-import com.javalinist.logic.Users
+import com.javalinist.JavalinistApplication
+import com.javalinist.logic.DB
 import com.javalinist.logic.users_table
 import com.javalinist.models.User
 import kong.unirest.Unirest
 import org.assertj.core.api.Assertions
+import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.FixMethodOrder
 import org.junit.jupiter.api.*
-import org.junit.runners.MethodSorters
-import kotlin.random.Random
 
 data class TestUsersResponse(val status: String, val result: List<User>)
 data class TestUserResponse(val status: String, val result: User)
@@ -33,6 +31,11 @@ class UsersTest {
     @AfterAll
     fun tearDown() {
         app.stop()
+        DB.run {
+            transaction {
+                SchemaUtils.drop(users_table)
+            }
+        }
     }
 
     @Test
@@ -71,7 +74,8 @@ class UsersTest {
     fun `Get users should content 1 user with new name`() {
         val response = Unirest.get("http://localhost:${port}/users")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
-        val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
+        val users: TestUsersResponse = response.asObject(
+            TestUsersResponse::class.java).getBody()
         Assertions.assertThat(users.status).isEqualTo("OK")
         val expected: List<User> = listOf(User(1, "Van"))
         Assertions.assertThat(users.result).isEqualTo(expected)
@@ -83,7 +87,8 @@ class UsersTest {
     fun `Delete from user should get OK`() {
         val response = Unirest.delete("http://localhost:${port}/users/1")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
-        val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
+        val users: TestUsersResponse = response.asObject(
+            TestUsersResponse::class.java).getBody()
         Assertions.assertThat(users.status).isEqualTo("OK")
         Assertions.assertThat(users.result).isNull()
     }
@@ -94,7 +99,8 @@ class UsersTest {
     fun `List after deletion should be empty list`() {
         val response = Unirest.get("http://localhost:${port}/users")
         Assertions.assertThat(response.asEmpty().status).isEqualTo(200)
-        val users: TestUsersResponse = response.asObject(TestUsersResponse::class.java).getBody()
+        val users: TestUsersResponse = response.asObject(
+            TestUsersResponse::class.java).getBody()
         Assertions.assertThat(users.status).isEqualTo("OK")
         Assertions.assertThat(users.result).isEmpty()
     }
@@ -119,7 +125,8 @@ class UsersTest {
 
         var response2 = Unirest.get("http://localhost:${port}/users?sortBy=name&order=desc")
         Assertions.assertThat(response2.asEmpty().status).isEqualTo(200)
-        var users: TestUsersResponse = response2.asObject(TestUsersResponse::class.java).getBody()
+        var users: TestUsersResponse = response2.asObject(
+            TestUsersResponse::class.java).getBody()
         Assertions.assertThat(users.status).isEqualTo("OK")
         var expected: List<User> = listOf(User(3, "Van"), User(2, "Nguyen"))
         Assertions.assertThat(users.result).isEqualTo(expected)
