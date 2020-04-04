@@ -102,10 +102,9 @@ open class Users {
     }
 
     fun findUser(name: String): User {
-        val fname = fixName(name)
         lateinit var user: User
         val query = DbUser.table.select {
-            users_table.name eq fname
+            users_table.name eq fixName(name)
         }
 
         transaction {
