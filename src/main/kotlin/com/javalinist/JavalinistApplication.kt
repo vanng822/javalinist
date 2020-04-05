@@ -56,7 +56,9 @@ class JavalinistApplication {
 
     fun start(port: Int = 8080) {
         app.routes {
-            ApiBuilder.crud("/users/:id", UserHandler())
+            ApiBuilder.path("api") {
+                ApiBuilder.crud("/users/:id", UserHandler())
+            }
             val sseHandler = UserSseHandler()
             ApiBuilder.sse("/sse/users", { client ->
                 sseHandler.handle(client)
@@ -68,8 +70,8 @@ class JavalinistApplication {
             // Web
             ApiBuilder.get("/", IndexHandler())
             ApiBuilder.get("/sse", SseWebHandler())
-        }
 
+        }
         registerValidators()
 
         DB.run {
