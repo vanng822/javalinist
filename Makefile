@@ -15,6 +15,9 @@ endif
 ifeq ($(DOCKER_REMOTE_HOST),)
 $(error error is "DOCKER_REMOTE_HOST not set")
 endif
+ifeq ("$(wildcard .git/hooks/pre-push)","")
+$(error error is ".git/hooks/pre-push not set, run 'ln -s ./script/pre-push.sh .git/hooks/pre-push'")
+endif
 else
 DOCKER := sudo docker
 TAG_VERSION := openjdk:8-jre
@@ -22,7 +25,7 @@ DOCKER_PORT_FORWARD_ARGS :=
 endif
 
 .PHONY: build
-build: build-jar test
+build: build-jar
 	$(DOCKER) build --build-arg TAG_VERSION=$(TAG_VERSION) -t $(image_tag) .
 
 test:
