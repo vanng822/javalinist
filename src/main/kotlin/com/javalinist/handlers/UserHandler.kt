@@ -67,11 +67,13 @@ class UserHandler : BaseHandler, CrudHandler {
         try {
             user = users.createUser(input.name)
         } catch (exc: ExposedSQLException) {
-            if (exc.cause is JdbcBatchUpdateException || exc.cause is JdbcSQLIntegrityConstraintViolationException) {
-                response(ctx, 409, NullResponse(ResponseStatus.INVALID))
-                return
+            when (exc.cause) {
+                is JdbcBatchUpdateException, is JdbcSQLIntegrityConstraintViolationException -> {
+                    response(ctx, 409, NullResponse(ResponseStatus.INVALID))
+                    return
+                }
+                else -> throw exc
             }
-            throw exc
         }
 
         response(ctx, 201, UserResponse(ResponseStatus.OK, user))
