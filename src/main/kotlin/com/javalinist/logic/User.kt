@@ -60,6 +60,8 @@ open class Users {
         return sortByOptions.getOrDefault(sortBy, users_table.id)
     }
 
+    fun all() = sort(sortBy = SortByOptions.ID, order = OrderOptions.ASC)
+
     fun sort(sortBy: SortByOptions, order: OrderOptions): List<User> {
         var users: MutableList<User> = mutableListOf()
         val sortColumn: Expression<*> = getSortBy(sortBy)

@@ -99,4 +99,14 @@ internal class UsersTest: BaseTest {
         val expectedIdAsc = listOf(nUser, vUser)
         Assertions.assertEquals(actualIdAsc, expectedIdAsc)
     }
+
+    @Test
+    fun all() {
+        val nUser = users.createUser("Nguyen")
+        val vUser = users.createUser("Van")
+
+        val actualNameAsc = users.all()
+        val expectedNameAsc = listOf(nUser, vUser)
+        Assertions.assertEquals(actualNameAsc, expectedNameAsc)
+    }
 }
