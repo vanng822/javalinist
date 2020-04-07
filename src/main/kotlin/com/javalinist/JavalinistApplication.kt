@@ -4,6 +4,7 @@ import com.javalinist.handlers.StatusHandler
 import com.javalinist.handlers.UserHandler
 import com.javalinist.handlers.UserSseHandler
 import com.javalinist.logic.DB
+import com.javalinist.logic.DB_OPTIONS
 import com.javalinist.logic.UserBroadcast
 import com.javalinist.logic.users_table
 import com.javalinist.validators.registerValidators
@@ -73,7 +74,6 @@ class JavalinistApplication {
 
         }
         registerValidators()
-
         DB.run {
             transaction {
                 SchemaUtils.create(users_table)

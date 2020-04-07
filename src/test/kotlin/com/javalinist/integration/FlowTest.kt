@@ -2,6 +2,7 @@ package com.javalinist.integration
 
 import com.javalinist.JavalinistApplication
 import com.javalinist.logic.DB
+import com.javalinist.logic.DB_CONNECTION_INFO
 import com.javalinist.logic.users_table
 import com.javalinist.models.User
 import kong.unirest.Unirest
@@ -17,26 +18,7 @@ data class TestUserResponse(val status: String, val result: User)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Users API - Flow")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class UsersTest {
-
-    private lateinit var app: JavalinistApplication
-    private var port = 5001
-
-    @BeforeAll
-    fun setUp() {
-        app = JavalinistApplication()
-        app.start(port)
-    }
-
-    @AfterAll
-    fun tearDown() {
-        app.stop()
-        DB.run {
-            transaction {
-                SchemaUtils.drop(users_table)
-            }
-        }
-    }
+class UsersTest: BaseTest() {
 
     @Test
     @Order(1)

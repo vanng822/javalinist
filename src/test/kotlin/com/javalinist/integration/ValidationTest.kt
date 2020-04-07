@@ -15,21 +15,7 @@ import org.junit.runners.MethodSorters
 @DisplayName("Users API - Validation")
 @FixMethodOrder(MethodSorters.JVM)
 @Tag("validation")
-class UsersValidationTest {
-
-    private lateinit var app: JavalinistApplication
-    private var port = 5003
-
-    @BeforeAll
-    fun setUp() {
-        app = JavalinistApplication()
-        app.start(port)
-    }
-
-    @AfterAll
-    fun tearDown() {
-        app.stop()
-    }
+class UsersValidationTest: BaseTest() {
 
     @Test
     fun `Get user with none Int for id should get 400`() {
