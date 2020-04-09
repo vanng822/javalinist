@@ -7,6 +7,7 @@ ENV env "prod"
 WORKDIR /app
 
 ADD ./README.md README.md
+ADD ./src/main/resources/static ./src/main/resources/static
 ADD ./build/libs/javalinist-1.0-all.jar javalinist-1.0.jar
 
 EXPOSE 8080

@@ -12,6 +12,7 @@ import com.javalinist.web_handlers.IndexHandler
 import com.javalinist.web_handlers.SseWebHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
+import io.javalin.http.staticfiles.Location
 import io.javalin.plugin.openapi.OpenApiOptions
 import io.javalin.plugin.openapi.OpenApiPlugin
 import io.javalin.plugin.openapi.ui.SwaggerOptions
@@ -50,6 +51,7 @@ class JavalinistApplication {
                 config.enableDevLogging()
             }
             config.registerPlugin(OpenApiPlugin(getOpenApiOptions()))
+            config.addStaticFiles("src/main/resources/static", Location.EXTERNAL)
         }
 
         app

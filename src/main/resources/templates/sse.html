@@ -3,40 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Server-sent events on users</title>
+    <link rel="stylesheet" type="text/css" href="/css/javalinist.css">
+    <script type="text/javascript" src="/js/javalinist.js"></script>
     <script type="text/javascript">
-        var evtSource = new EventSource("/sse/users");
-        evtSource.addEventListener("CREATED", function(e) {
-            var data = JSON.parse(e.data);
-            console.log(e.type, data);
-            document.getElementById("sseContent").appendChild(renderEvent(e.type, data));
-        }); evtSource.addEventListener("UPDATED", function(e) {
-            var data = JSON.parse(e.data);
-            console.log(e.type, data);
-            document.getElementById("sseContent").appendChild(renderEvent(e.type, data));
-        });evtSource.addEventListener("DELETED", function(e) {
-            var data = JSON.parse(e.data);
-            console.log(e.type, data);
-            document.getElementById("sseContent").appendChild(renderEvent(e.type, data));
-        })
-
-        function renderEvent(eventName, data) {
-            var el = document.createElement("div");
-            el.innerHTML = eventName + ": " + JSON.stringify(data);
-            return el;
-        }
+        (function() {
+            startSse();
+        })();
     </script>
-    <style>
-        .center {
-            text-align: center;
-            font-size: 12px;
-        }
-        .headline {
-            font-weight: bold;
-            text-align: center;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-    </style>
 </head>
 <body>
 <div class="headline">Server-sent events on users</div>
